@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>第45屆 JEPT 代報名</title>
+  <style>
+    *{box-sizing:border-box} body{margin:0;background:#eef4fb;color:#10243d;font-family:"Microsoft JhengHei","Noto Sans TC",Arial,sans-serif}
+    header{background:#1f5ca3;color:#fff;padding:28px 18px 18px;border-bottom:5px solid #e11d2e}
+    .hero{max-width:1040px;margin:auto}.top{display:flex;align-items:flex-start;gap:22px;flex-wrap:wrap}
+    .logo{font-size:82px;font-weight:900;letter-spacing:3px;line-height:.9}.badge{width:96px;height:96px;border:3px solid #fff;border-radius:50%;display:grid;place-items:center;font-size:44px}
+    h1{font-size:38px;margin:18px 0 4px;letter-spacing:4px}.yellow{color:#ffd33d}.en{font-size:20px;font-weight:800}.tag{color:#ffd33d;font-size:18px;font-weight:800;margin-top:8px}
+    .skills{border-top:3px solid #e11d2e;margin-top:18px;padding-top:12px;font-weight:800;display:flex;gap:18px;flex-wrap:wrap}
+    main{max-width:1040px;margin:24px auto;padding:0 14px}.tabs{display:flex;gap:8px;margin-bottom:14px}.tab{border:1px solid #b8cae0;background:#fff;color:#174777;border-radius:8px;padding:10px 16px;font-weight:700;cursor:pointer}.tab.active{background:#1f5ca3;color:#fff}
+    .panel{background:#fff;border:1px solid #c9d8ea;border-radius:8px;padding:22px;box-shadow:0 8px 24px rgba(31,92,163,.08)}.layout{display:grid;grid-template-columns:minmax(320px,420px) 1fr;gap:18px}
+    h2{margin:0 0 8px;color:#0f376a}.sub{color:#52677f;line-height:1.7;margin:0 0 18px}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.wide{grid-column:1/-1}label{display:block;font-weight:700;color:#1f334d}
+    input,select,textarea{width:100%;margin-top:7px;border:1px solid #b9cbe0;border-radius:7px;padding:11px;font:inherit;background:#fff}textarea{min-height:92px;resize:vertical}
+    button{border:0;background:#1f5ca3;color:#fff;border-radius:8px;padding:12px 18px;font-weight:800;cursor:pointer}.secondary{background:#e8f1fb;color:#164a82;border:1px solid #b9cbe0}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}.info{background:#edf6ff;border:1px solid #b8d7f5;border-radius:8px;padding:13px;margin-top:14px;color:#16395c;line-height:1.7}.warn{background:#fff7ed;border-color:#fed7aa;color:#7c2d12}
+    table{width:100%;border-collapse:collapse;font-size:15px}th{background:#1f5ca3;color:#fff;text-align:left}th,td{border:1px solid #c9d8ea;padding:10px}.hidden{display:none}
+    .birth{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}.privacy{font-size:14px;color:#5a6e84;line-height:1.7;margin-top:12px}
+    @media (max-width:820px){.layout{grid-template-columns:1fr}.logo{font-size:56px}.badge{width:74px;height:74px;font-size:34px}h1{font-size:28px}.grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="hero">
+      <div class="top"><div class="logo">JEPT</div><div class="badge"><span id="edition">45</span></div></div>
+      <h1>佳音英語文能力<span class="yellow">線上</span>檢定</h1>
+      <div class="en">JOY ENGLISH PROFICIENCY TEST ONLINE</div>
+      <div class="tag">順應未來趨勢 在家就能考試</div>
+      <div class="skills"><span>LISTENING 聽力</span><span>READING 閱讀</span><span>WRITING 寫作</span><span>SPEAKING 口說</span></div>
+    </div>
+  </header>
+
+  <main>
+    <div class="tabs">
+      <button class="tab active" type="button" data-page="apply">家長報名</button>
+      <button class="tab" type="button" data-page="lookup">報名查詢</button>
+    </div>
+
+    <section id="apply" class="layout">
+      <form id="applyForm" class="panel">
+        <h2>家長報名表</h2>
+        <p class="sub">請依孩子資料填寫。送出後請至佳音櫃台繳交對應報名級數的金額。</p>
+        <div class="grid">
+          <label class="wide">報名分校<select name="campus" required></select></label>
+          <label>中文姓名<input name="chineseName" required autocomplete="off"></label>
+          <label>英文姓名<input name="englishName" required autocomplete="off"></label>
+          <label>性別<select name="gender" required><option value="">請選擇</option><option>男</option><option>女</option></select></label>
+          <label>身分證字號<input name="nationalId" maxlength="10" required autocomplete="off"></label>
+          <label class="wide">西元出生日期
+            <div class="birth">
+              <input name="birthYear" inputmode="numeric" maxlength="4" placeholder="年份">
+              <input name="birthMonth" inputmode="numeric" maxlength="2" placeholder="月份">
+              <input name="birthDay" inputmode="numeric" maxlength="2" placeholder="日期">
+            </div>
+          </label>
+          <label>就讀年級<select name="schoolGrade" required></select></label>
+          <label>報名級數<select name="levelId" required></select></label>
+          <label>聯絡電話<input name="phone" required autocomplete="off"></label>
+          <label>緊急連絡人手機<input name="emergencyPhone" required autocomplete="off"></label>
+          <label class="wide">家長緊急聯絡人姓名<input name="emergencyName" required autocomplete="off"></label>
+        </div>
+        <div class="actions"><button type="submit">送出報名</button><button class="secondary" type="reset">清空資料</button></div>
+        <div id="applyMsg" class="info hidden"></div>
+        <p class="privacy">個資安全：本頁不會把身分證、生日、電話等資料存在網頁程式碼或瀏覽器 localStorage。正式收件必須連接公司核准的 HTTPS 安全後端。</p>
+      </form>
+
+      <aside class="panel">
+        <h2>級數參考表</h2>
+        <p class="sub">家長選擇分校後，會顯示該分校目前開放的級數與費用。</p>
+        <table id="levelTable"></table>
+      </aside>
+    </section>
+
+    <section id="lookup" class="panel hidden">
+      <h2>家長報名查詢</h2>
+      <p class="sub">用孩子中文姓名與聯絡電話後三碼查詢。</p>
+      <form id="lookupForm" class="grid">
+        <label>分校<select name="campus"></select></label>
+        <label>孩子中文姓名<input name="chineseName" required autocomplete="off"></label>
+        <label>聯絡電話後三碼<input name="phoneLast3" required maxlength="3" inputmode="numeric" autocomplete="off"></label>
+        <div class="wide actions"><button type="submit">查詢</button></div>
+      </form>
+      <div id="lookupMsg" class="info hidden"></div>
+    </section>
+  </main>
+
+  <script>
+    const FORM_ENDPOINT = "";
+    const LOOKUP_ENDPOINT = "";
+    const campuses = [
+      ["yp","永平分校"],["yh","永和分校"],["qs","清水分校"],["jc","江翠分校"]
+    ];
+    const levels = {
+      yp:[["1","第一級","聽力、閱讀","TJ1~4","TQ、TK、TV、TG",850],["2","第二級","聽力、閱讀","TJ1~8","TW、TF、TN、TI",850],["3","第三級","聽力、閱讀","MJ1~2","X",850],["4","第四級","聽力、閱讀","MJ1~4","MZ",850],["5","第五級","聽力、閱讀、寫作","MJ1~7","ME、MT、MU",1100],["6","第六級","聽力、閱讀、寫作","MJ1~10","MA、MCB、MP、MXA、MXB",1100],["7","第七級","聽力、閱讀、寫作、口說","MJ1~13","MB、MLA、MLB",1250],["8","第八級","聽力、閱讀、寫作、口說","MJ1~16","X",1250]]
+    };
+    ["yh","qs","jc"].forEach(id => levels[id] = levels.yp.map(row => [...row]));
+    const $ = s => document.querySelector(s);
+    const $$ = s => [...document.querySelectorAll(s)];
+    const esc = v => String(v ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+    const campusName = id => (campuses.find(c => c[0] === id) || campuses[0])[1];
+    const levelInfo = (campus,id) => (levels[campus] || levels.yp).find(l => l[0] === id);
+
+    function fillSelects(){
+      const campusHtml = campuses.map(c => `<option value="${c[0]}">${c[1]}</option>`).join("");
+      $$("select[name=campus]").forEach(s => s.innerHTML = campusHtml);
+      $("select[name=schoolGrade]").innerHTML = ["一年級","二年級","三年級","四年級","五年級","六年級"].map(g => `<option>${g}</option>`).join("");
+      renderLevels();
+    }
+    function renderLevels(){
+      const campus = $("#applyForm select[name=campus]").value || "yp";
+      $("select[name=levelId]").innerHTML = levels[campus].map(l => `<option value="${l[0]}">${l[1]} ${l[3]} - ${l[5]}元</option>`).join("");
+      $("#levelTable").innerHTML = `<thead><tr><th>級數</th><th>檢定項目</th><th>教材</th><th>班級</th><th>費用</th></tr></thead><tbody>${levels[campus].map(l => `<tr><td>${l[1]}</td><td>${l[2]}</td><td>${l[3]}</td><td>${l[4]}</td><td>${l[5]}元</td></tr>`).join("")}</tbody>`;
+    }
+    async function postJson(url, payload){
+      const res = await fetch(url, { method:"POST", headers:{ "Content-Type":"application/json" }, body:JSON.stringify(payload) });
+      if (!res.ok) throw new Error("送出失敗");
+      return res.json().catch(() => ({}));
+    }
+    $("#applyForm").addEventListener("submit", async e => {
+      e.preventDefault();
+      const fd = new FormData(e.currentTarget);
+      const payload = Object.fromEntries(fd.entries());
+      payload.birthDate = `${payload.birthYear}-${payload.birthMonth}-${payload.birthDay}`;
+      payload.campusName = campusName(payload.campus);
+      const lv = levelInfo(payload.campus, payload.levelId);
+      payload.levelName = lv ? lv[1] : "";
+      payload.material = lv ? lv[3] : "";
+      payload.fee = lv ? lv[5] : "";
+      const msg = $("#applyMsg");
+      msg.classList.remove("hidden","warn");
+      if (!FORM_ENDPOINT) {
+        msg.classList.add("warn");
+        msg.textContent = "目前是安全上線前台版，尚未連接公司安全收件後端，所以不會保存這筆個資。請先請資訊端提供 HTTPS 收件網址。";
+        return;
+      }
+      try {
+        await postJson(FORM_ENDPOINT, payload);
+        msg.textContent = `已收到報名資料。請至佳音櫃台繳交 ${payload.levelName} 報名費 ${payload.fee} 元。`;
+        e.currentTarget.reset();
+        renderLevels();
+      } catch {
+        msg.classList.add("warn");
+        msg.textContent = "送出失敗，請稍後再試或洽佳音櫃台。";
+      }
+    });
+    $("#lookupForm").addEventListener("submit", async e => {
+      e.preventDefault();
+      const fd = new FormData(e.currentTarget);
+      const payload = Object.fromEntries(fd.entries());
+      const msg = $("#lookupMsg");
+      msg.classList.remove("hidden","warn");
+      if (!LOOKUP_ENDPOINT) {
+        msg.classList.add("warn");
+        msg.textContent = "查詢功能尚未連接公司安全後端。正式版會由後端查詢，不會在前台公開個資資料庫。";
+        return;
+      }
+      try {
+        const data = await postJson(LOOKUP_ENDPOINT, payload);
+        msg.innerHTML = `查詢結果<br>分校：${esc(data.campusName || "")}<br>學生姓名：${esc(data.studentName || "")}<br>報名級數：${esc(data.levelName || "")}<br>教材：${esc(data.material || "")}<br>健保卡：${esc(data.healthCard || "未確認")} / 大頭照：${esc(data.headshot || "未收")} / 費用：${esc(data.paid || "未繳")}`;
+      } catch {
+        msg.classList.add("warn");
+        msg.textContent = "查詢失敗，請確認資料或洽佳音櫃台。";
+      }
+    });
+    $$(".tab").forEach(btn => btn.addEventListener("click", () => {
+      $$(".tab").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      $$("main section").forEach(s => s.classList.add("hidden"));
+      $("#" + btn.dataset.page).classList.remove("hidden");
+    }));
+    $("#applyForm select[name=campus]").addEventListener("change", renderLevels);
+    const phone = $("input[name=phone]");
+    const emergencyPhone = $("input[name=emergencyPhone]");
+    let emergencyEdited = false;
+    emergencyPhone.addEventListener("input", () => emergencyEdited = true);
+    phone.addEventListener("input", () => { if (!emergencyEdited) emergencyPhone.value = phone.value; });
+    [["birthYear","birthMonth"],["birthMonth","birthDay"]].forEach(([a,b]) => {
+      const input = $(`input[name=${a}]`);
+      input.addEventListener("input", () => { if (input.value.length >= input.maxLength) $(`input[name=${b}]`).focus(); });
+    });
+    fillSelects();
+  </script>
+</body>
+</html>

@@ -3,13 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>第45屆 JEPT 代報名</title>
+  <title>JEPT 代報名</title>
   <style>
     *{box-sizing:border-box} body{margin:0;background:#eef4fb;color:#10243d;font-family:"Microsoft JhengHei","Noto Sans TC",Arial,sans-serif}
     header{background:#1f5ca3;color:#fff;padding:28px 18px 18px;border-bottom:5px solid #e11d2e}
     .hero{max-width:1040px;margin:auto}.top{display:flex;align-items:flex-start;gap:22px;flex-wrap:wrap}
     .logo{font-size:82px;font-weight:900;letter-spacing:3px;line-height:.9}.badge{width:96px;height:96px;border:3px solid #fff;border-radius:50%;display:grid;place-items:center;font-size:44px}
     h1{font-size:38px;margin:18px 0 4px;letter-spacing:4px}.yellow{color:#ffd33d}.en{font-size:20px;font-weight:800}.tag{color:#ffd33d;font-size:18px;font-weight:800;margin-top:8px}
+    .event-meta{display:flex;gap:18px;flex-wrap:wrap;margin-top:12px;font-size:16px;font-weight:800;color:#eaf3ff}.event-meta b{color:#ffd33d}
     .skills{border-top:3px solid #e11d2e;margin-top:18px;padding-top:12px;font-weight:800;display:flex;gap:18px;flex-wrap:wrap}
     main{max-width:1040px;margin:24px auto;padding:0 14px}.tabs{display:flex;gap:8px;margin-bottom:14px}.tab{border:1px solid #b8cae0;background:#fff;color:#174777;border-radius:8px;padding:10px 16px;font-weight:700;cursor:pointer}.tab.active{background:#1f5ca3;color:#fff}
     .panel{background:#fff;border:1px solid #c9d8ea;border-radius:8px;padding:22px;box-shadow:0 8px 24px rgba(31,92,163,.08)}.layout{display:grid;grid-template-columns:minmax(320px,420px) 1fr;gap:18px}
@@ -26,10 +27,14 @@
 <body>
   <header>
     <div class="hero">
-      <div class="top"><div class="logo">JEPT</div><div class="badge"><span id="edition">45</span></div></div>
-      <h1>佳音英語文能力<span class="yellow">線上</span>檢定</h1>
+      <div class="top"><div class="logo">JEPT</div><div class="badge"><span id="edition">45th</span></div></div>
+      <h1 id="heroTitle">佳音英語文能力<span class="yellow">線上</span>檢定</h1>
       <div class="en">JOY ENGLISH PROFICIENCY TEST ONLINE</div>
-      <div class="tag">順應未來趨勢 在家就能考試</div>
+      <div id="heroSubtitle" class="tag">順應未來趨勢 在家就能考試</div>
+      <div class="event-meta">
+        <span>檢定日期：<b id="examDateText">2026/11/22(日)</b></span>
+        <span>報名日期：<b id="signupDateText">2026/08/10(一) 到 2026/08/28(五)</b></span>
+      </div>
       <div class="skills"><span>LISTENING 聽力</span><span>READING 閱讀</span><span>WRITING 寫作</span><span>SPEAKING 口說</span></div>
     </div>
   </header>
@@ -43,7 +48,7 @@
     <section id="apply" class="layout">
       <form id="applyForm" class="panel">
         <h2>家長報名表</h2>
-        <p class="sub">請依孩子資料填寫。送出後請至佳音櫃台繳交對應報名級數的金額。</p>
+        <p id="applyIntro" class="sub">請依孩子資料填寫。送出後請至佳音櫃台繳交對應報名級數的金額。</p>
         <div class="grid">
           <label class="wide">報名分校<select name="campus" required></select></label>
           <label>中文姓名<input name="chineseName" required autocomplete="off"></label>
@@ -89,6 +94,17 @@
   </main>
 
   <script>
+    // 每一屆要修改的資料集中放這裡。
+    // 之後只要改這幾行，再重新上傳 index.html 到 GitHub，就能更新前台。
+    const siteSettings = {
+      edition: "45th",
+      pageTitle: "第45屆 JEPT 代報名",
+      heroTitle: "佳音英語文能力線上檢定",
+      heroSubtitle: "順應未來趨勢 在家就能考試",
+      examDate: "2026/11/22(日)",
+      signupDate: "2026/08/10(一) 到 2026/08/28(五)",
+      applyIntro: "請依孩子資料填寫。送出後請至佳音櫃台繳交對應報名級數的金額。"
+    };
     const FORM_ENDPOINT = "https://script.google.com/macros/s/AKfycbwv00_1dh0vd47VgyQMGPzxk13Wr0M62T8Phz5k1gFzarWF0OEfYJwwmDWYVF8rrFsA/exec";
     const LOOKUP_ENDPOINT = "https://script.google.com/macros/s/AKfycbwv00_1dh0vd47VgyQMGPzxk13Wr0M62T8Phz5k1gFzarWF0OEfYJwwmDWYVF8rrFsA/exec";
     const campuses = [
@@ -104,6 +120,16 @@
     const campusName = id => (campuses.find(c => c[0] === id) || campuses[0])[1];
     const levelInfo = (campus,id) => (levels[campus] || levels.yp).find(l => l[0] === id);
 
+    function renderSiteSettings(){
+      document.title = siteSettings.pageTitle;
+      $("#edition").textContent = siteSettings.edition;
+      $("#heroTitle").innerHTML = esc(siteSettings.heroTitle).replace("線上", '<span class="yellow">線上</span>');
+      $("#heroSubtitle").textContent = siteSettings.heroSubtitle;
+      $("#examDateText").textContent = siteSettings.examDate;
+      $("#signupDateText").textContent = siteSettings.signupDate;
+      $("#applyIntro").textContent = siteSettings.applyIntro;
+    }
+
     function fillSelects(){
       const campusHtml = campuses.map(c => `<option value="${c[0]}">${c[1]}</option>`).join("");
       $$("select[name=campus]").forEach(s => s.innerHTML = campusHtml);
@@ -115,10 +141,33 @@
       $("select[name=levelId]").innerHTML = levels[campus].map(l => `<option value="${l[0]}">${l[1]} ${l[3]} - ${l[5]}元</option>`).join("");
       $("#levelTable").innerHTML = `<thead><tr><th>級數</th><th>檢定項目</th><th>教材</th><th>班級</th><th>費用</th></tr></thead><tbody>${levels[campus].map(l => `<tr><td>${l[1]}</td><td>${l[2]}</td><td>${l[3]}</td><td>${l[4]}</td><td>${l[5]}元</td></tr>`).join("")}</tbody>`;
     }
-    async function postJson(url, payload){
-      const res = await fetch(url, { method:"POST", headers:{ "Content-Type":"application/json" }, body:JSON.stringify(payload) });
-      if (!res.ok) throw new Error("送出失敗");
-      return res.json().catch(() => ({}));
+    async function submitRegistration(url, payload){
+      await fetch(url, {
+        method:"POST",
+        mode:"no-cors",
+        headers:{ "Content-Type":"text/plain;charset=utf-8" },
+        body:JSON.stringify({ ...payload, action:"submit" })
+      });
+      return { ok:true };
+    }
+    function getJsonp(url, payload){
+      return new Promise((resolve, reject) => {
+        const callback = "jeptCallback" + Date.now() + Math.random().toString(16).slice(2);
+        const script = document.createElement("script");
+        const params = new URLSearchParams({ ...payload, callback });
+        window[callback] = data => {
+          delete window[callback];
+          script.remove();
+          resolve(data);
+        };
+        script.onerror = () => {
+          delete window[callback];
+          script.remove();
+          reject(new Error("查詢失敗"));
+        };
+        script.src = `${url}?${params.toString()}`;
+        document.body.appendChild(script);
+      });
     }
     $("#applyForm").addEventListener("submit", async e => {
       e.preventDefault();
@@ -138,8 +187,8 @@
         return;
       }
       try {
-        await postJson(FORM_ENDPOINT, payload);
-        msg.textContent = `已收到報名資料。請至佳音櫃台繳交 ${payload.levelName} 報名費 ${payload.fee} 元。`;
+        await submitRegistration(FORM_ENDPOINT, payload);
+        msg.textContent = `報名資料已送出。請至佳音櫃台繳交 ${payload.levelName} 報名費 ${payload.fee} 元。若試算表未立即出現，請稍候重新整理。`;
         e.currentTarget.reset();
         renderLevels();
       } catch {
@@ -159,7 +208,8 @@
         return;
       }
       try {
-        const data = await postJson(LOOKUP_ENDPOINT, payload);
+        const data = await getJsonp(LOOKUP_ENDPOINT, { action:"lookup", ...payload });
+        if (!data.ok) throw new Error(data.message || "查無資料");
         msg.innerHTML = `查詢結果<br>分校：${esc(data.campusName || "")}<br>學生姓名：${esc(data.studentName || "")}<br>報名級數：${esc(data.levelName || "")}<br>教材：${esc(data.material || "")}<br>健保卡：${esc(data.healthCard || "未確認")} / 大頭照：${esc(data.headshot || "未收")} / 費用：${esc(data.paid || "未繳")}`;
       } catch {
         msg.classList.add("warn");
@@ -182,6 +232,7 @@
       const input = $(`input[name=${a}]`);
       input.addEventListener("input", () => { if (input.value.length >= input.maxLength) $(`input[name=${b}]`).focus(); });
     });
+    renderSiteSettings();
     fillSelects();
   </script>
 </body>

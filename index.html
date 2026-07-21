@@ -269,15 +269,18 @@
 
     <section id="export" class="tab-page panel hidden">
       <div class="head">
-        <div><h2>佳音格式</h2><p class="sub">正式版會把完整個資限制在授權後台匯出，不放在前台程式碼。</p></div>
-        <div class="actions"><select id="exportCampus" onchange="render()"></select><button class="secondary" onclick="copyExcel()">複製到 Excel</button></div>
+        <div>
+          <h2>佳音格式</h2>
+          <p class="sub">正式佳音格式含身分證、生日與電話，請直接到 Google 試算表的「報名資料」工作表複製或下載。這裡不從公開前台輸出完整個資。</p>
+        </div>
+        <div class="actions"><button class="secondary" onclick="copyExcel()">查看匯出提醒</button></div>
       </div>
-      <div class="table-wrap"><table id="exportTable"></table></div>
+      <div class="info">為避免家長個資出現在前台畫面，這一頁不顯示報名清冊。老師需要正式佳音格式時，請用 Google 帳號開啟試算表處理。</div>
     </section>
   </main>
 
   <script>
-    const key = "jept-online-full-v1";
+    const key = "jept-online-full-v2";
     const API_ENDPOINT = "https://script.google.com/macros/s/AKfycbwv00_1dh0vd47VgyQMGPzxk13Wr0M62T8Phz5k1gFzarWF0OEfYJwwmDWYVF8rrFsA/exec";
     const campuses = [
       { id:"yp", name:"永平分校", code:"BB010" },
@@ -337,6 +340,7 @@
       regs:[]
     };
     let state = JSON.parse(localStorage.getItem(key) || "null") || structuredClone(defaults);
+    state.regs = (state.regs || []).map(scrubLocalRegistration);
     let emergencyPhoneChanged = false;
     let teacherUnlocked = sessionStorage.getItem("jeptTeacherUnlocked") === "yes";
 
@@ -348,6 +352,14 @@
     }
 
     const $ = id => document.getElementById(id);
+    function scrubLocalRegistration(reg){
+      if (!reg) return reg;
+      reg.nationalId = "";
+      reg.birthDate = "";
+      reg.phone = "";
+      reg.emergencyPhone = "";
+      return reg;
+    }
     function api(action, payload = {}){
       return new Promise(resolve => {
         const callback = "jeptApiCallback" + Date.now() + Math.random().toString(16).slice(2);
@@ -381,12 +393,12 @@
         chineseName: row.chineseName || "",
         englishName: row.englishName || "",
         gender: row.gender || "",
-        nationalId: row.nationalId || "",
-        birthDate: row.birthDate || "",
+        nationalId: "",
+        birthDate: "",
         schoolGrade: row.schoolGrade || "",
-        phone: row.phone || "",
+        phone: "",
         emergencyName: row.emergencyName || "",
-        emergencyPhone: row.emergencyPhone || "",
+        emergencyPhone: "",
         className: row.className || "",
         desiredLevelId,
         finalLevelId,
@@ -585,6 +597,7 @@
         const result = await api("submit", regPayload(pendingReg));
         if (!result || !result.ok) throw new Error(result?.message || "送出失敗");
         pendingReg.id = result.id;
+        scrubLocalRegistration(pendingReg);
         state.regs.push(pendingReg);
         state.lastGuardian = {
           campus:data.get("campus") || "yp",
@@ -613,25 +626,29 @@
       }
     };
 
-    function lookupRegistration(){
-      const reg = state.regs.find(r => r.campus === $("lookupCampus").value && r.chineseName.trim() === $("lookupName").value.trim() && last3(r.phone) === $("lookupPhone").value.trim());
+    async function lookupRegistration(){
       $("lookupResult").classList.remove("hidden");
-      if (!reg) {
+      $("lookupResult").className = "info";
+      $("lookupResult").textContent = "查詢中...";
+      const reg = await api("lookup", {
+        campus:$("lookupCampus").value,
+        chineseName:$("lookupName").value.trim(),
+        phoneLast3:$("lookupPhone").value.trim()
+      });
+      if (!reg || !reg.ok) {
         $("lookupResult").className = "danger-box";
         $("lookupResult").textContent = "查不到報名資料，請確認分校、孩子姓名與電話後三碼。";
         return;
       }
       $("lookupResult").className = "info";
-      const lookupLevelId = reg.finalLevelId || reg.desiredLevelId;
-      const lookupLevel = levelInfo(lookupLevelId);
       $("lookupResult").innerHTML = `
         <strong>查詢結果</strong><br>
-        分校：${esc(campus(reg.campus).name)}<br>
-        學生姓名：${esc(maskName(reg.chineseName))}<br>
-        報名級數：${esc(levelName(lookupLevelId))}<br>
-        教材：${esc(lookupLevel ? lookupLevel[4] : "尚未確認")}<br>
+        分校：${esc(reg.campusName || "")}<br>
+        學生姓名：${esc(reg.studentName || "")}<br>
+        報名級數：${esc(reg.levelName || "尚未確認")}<br>
+        教材：${esc(reg.material || "尚未確認")}<br>
         狀態：${esc(reg.status)}<br>
-        健保卡：${reg.healthCard ? "已確認" : "未確認"} / 大頭照：${reg.headshot ? "已收" : "未收"} / 費用：${reg.paid ? "已繳" : "未繳"}
+        健保卡：${esc(reg.healthCard || "未確認")} / 大頭照：${esc(reg.headshot || "未收")} / 費用：${esc(reg.paid || "未繳")}
       `;
     }
 
@@ -714,27 +731,6 @@
       save();
     }
 
-    function exportRows(){
-      const selected = $("exportCampus").value || "yp";
-      return state.regs.filter(r => r.campus === selected).map((r,i) => ({
-        "系統ID": 139637 + i,
-        "報考考區": "線上",
-        "分校名稱": campus(r.campus).name.replace("分校",""),
-        "分校代碼": campus(r.campus).code,
-        "中文名": r.chineseName,
-        "英文名": r.englishName,
-        "身份證字號": r.nationalId,
-        "西元出生": r.birthDate,
-        "家長(緊急)聯絡人姓名": r.emergencyName,
-        "家長(緊急)聯絡電話": formatPhoneForExcel(r.emergencyPhone),
-        "聯絡電話": formatPhoneForExcel(r.phone),
-        "就讀年級": r.schoolGrade,
-        "報考級別": levelName(r.finalLevelId || r.desiredLevelId),
-        "繳費": r.paid ? "已" : "未",
-        "准考證號": "",
-        "教室編號": ""
-      }));
-    }
     function copyExcel(){
       alert("正式佳音格式含身分證、生日與電話，請直接到 Google 試算表的『報名資料』工作表複製或下載，不從公開前台輸出。");
     }
@@ -904,8 +900,6 @@
       });
       $("adminTable").innerHTML = table(["列印","編號","級數","姓名","健保卡","大頭照","費用","收執聯","狀態",""], adminBodyRows);
 
-      const exportRowsHtml = exportRows().map(r => `<tr>${Object.values(r).map(v => `<td>${esc(v)}</td>`).join("")}</tr>`);
-      $("exportTable").innerHTML = table(Object.keys(exportRows()[0] || {"目前沒有資料":""}), exportRowsHtml.length ? exportRowsHtml : ['<tr><td>目前沒有資料</td></tr>']);
     }
 
     loadOnlineData().catch(() => render());

@@ -3,261 +3,912 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>佳音體系代報名管理</title>
+  <title>佳音 JEPT 報名系統測試版</title>
   <style>
-    *{box-sizing:border-box} body{margin:0;background:#eef4fb;color:#10243d;font-family:"Microsoft JhengHei","Noto Sans TC",Arial,sans-serif}
-    header{background:#1f5ca3;color:#fff;padding:28px 18px 18px;border-bottom:5px solid #e11d2e}
-    .hero{max-width:1040px;margin:auto}.top{display:flex;align-items:flex-start;gap:22px;flex-wrap:wrap}
-    .logo{font-size:82px;font-weight:900;letter-spacing:3px;line-height:.9}.badge{width:96px;height:96px;border:3px solid #fff;border-radius:50%;display:grid;place-items:center;font-size:44px}
-    h1{font-size:38px;margin:18px 0 4px;letter-spacing:4px}.yellow{color:#ffd33d}.en{font-size:20px;font-weight:800}.tag{color:#ffd33d;font-size:18px;font-weight:800;margin-top:8px}
-    .event-meta{display:flex;gap:18px;flex-wrap:wrap;margin-top:12px;font-size:16px;font-weight:800;color:#eaf3ff}.event-meta b{color:#ffd33d}
-    .skills{border-top:3px solid #e11d2e;margin-top:18px;padding-top:12px;font-weight:800;display:flex;gap:18px;flex-wrap:wrap}
-    main{max-width:1040px;margin:24px auto;padding:0 14px}.tabs{display:flex;gap:8px;margin-bottom:14px}.tab{border:1px solid #b8cae0;background:#fff;color:#174777;border-radius:8px;padding:10px 16px;font-weight:700;cursor:pointer}.tab.active{background:#1f5ca3;color:#fff}
-    .panel{background:#fff;border:1px solid #c9d8ea;border-radius:8px;padding:22px;box-shadow:0 8px 24px rgba(31,92,163,.08)}.layout{display:grid;grid-template-columns:minmax(320px,420px) 1fr;gap:18px}
-    h2{margin:0 0 8px;color:#0f376a}.sub{color:#52677f;line-height:1.7;margin:0 0 18px}
-    .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.wide{grid-column:1/-1}label{display:block;font-weight:700;color:#1f334d}
-    input,select,textarea{width:100%;margin-top:7px;border:1px solid #b9cbe0;border-radius:7px;padding:11px;font:inherit;background:#fff}textarea{min-height:92px;resize:vertical}
-    button{border:0;background:#1f5ca3;color:#fff;border-radius:8px;padding:12px 18px;font-weight:800;cursor:pointer}.secondary{background:#e8f1fb;color:#164a82;border:1px solid #b9cbe0}
-    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}.info{background:#edf6ff;border:1px solid #b8d7f5;border-radius:8px;padding:13px;margin-top:14px;color:#16395c;line-height:1.7}.warn{background:#fff7ed;border-color:#fed7aa;color:#7c2d12}
-    table{width:100%;border-collapse:collapse;font-size:15px}th{background:#1f5ca3;color:#fff;text-align:left}th,td{border:1px solid #c9d8ea;padding:10px}.hidden{display:none}
-    .birth{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}.privacy{font-size:14px;color:#5a6e84;line-height:1.7;margin-top:12px}
-    @media (max-width:820px){.layout{grid-template-columns:1fr}.logo{font-size:56px}.badge{width:74px;height:74px;font-size:34px}h1{font-size:28px}.grid{grid-template-columns:1fr}}
+    :root { --blue:#1f5b9f; --ink:#102033; --muted:#607086; --line:#cdd9e8; --bg:#f4f7fb; --soft:#eef4fb; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:Arial, "Microsoft JhengHei", sans-serif; color:var(--ink); background:var(--bg); }
+    header { background:#21579f; border-bottom:4px solid #d71920; color:#fff; }
+    .hero { max-width:1180px; margin:0 auto; padding:26px 20px 18px; display:grid; grid-template-columns:1.35fr .75fr; gap:20px; align-items:center; }
+    .brand-panel { min-width:0; }
+    .brand-row { display:flex; align-items:center; gap:26px; margin-bottom:16px; }
+    .jept-word { color:#fff; font-size:104px; line-height:.82; font-weight:900; letter-spacing:4px; font-family:Arial Black, Impact, Arial, sans-serif; }
+    .edition-badge { width:112px; height:112px; border:2px solid rgba(255,255,255,.9); border-radius:50%; display:flex; align-items:center; justify-content:center; position:relative; flex:0 0 auto; }
+    .edition-badge::after { content:""; position:absolute; right:12px; bottom:10px; width:28px; height:28px; border-right:2px solid #fff; border-bottom:2px solid #fff; border-radius:0 0 28px 0; }
+    .edition-badge strong { font-size:56px; font-weight:400; line-height:1; }
+    .edition-badge small { font-size:22px; margin-left:2px; align-self:center; }
+    .hero-main-title { color:#fff; font-size:46px; font-weight:900; line-height:1.1; letter-spacing:2px; }
+    .hero-main-title .yellow { color:#ffd84d; }
+    .hero-en { margin-top:8px; font-size:26px; font-weight:900; letter-spacing:.5px; }
+    .hero-tagline { margin:8px 0 12px; color:#ffd84d; font-size:22px; font-weight:900; text-align:center; }
+    .skill-strip { border-top:3px solid #ef2b2d; padding-top:9px; display:flex; gap:14px; flex-wrap:wrap; font-weight:900; font-size:16px; }
+    .skill-strip span { white-space:nowrap; }
+    .skill-strip b { font-size:18px; }
+    h1, h2, h3 { margin:0; }
+    h1 { font-size:30px; color:var(--blue); letter-spacing:0; }
+    header h1 { color:#fff; }
+    .sub { color:var(--muted); margin-top:8px; line-height:1.6; }
+    header .sub { color:#dbeafe; }
+    .dates { display:grid; gap:8px; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.28); border-radius:8px; padding:14px; }
+    .dates b { color:#fff; }
+    .dates a { color:#fff; font-weight:700; }
+    nav { max-width:1180px; margin:14px auto 0; padding:0 20px; display:flex; gap:8px; flex-wrap:wrap; }
+    .tab, button { border:0; border-radius:6px; padding:10px 14px; background:var(--blue); color:#fff; cursor:pointer; font-weight:700; }
+    .tab, .teacher-toggle { background:#e7eef8; color:#234; }
+    .tab.active { background:var(--blue); color:#fff; }
+    .tab.locked { display:none; }
+    .teacher-toggle { margin-left:auto; min-width:44px; display:inline-grid; place-items:center; padding:9px 12px; }
+    .teacher-toggle svg { width:24px; height:24px; stroke:#0f172a; stroke-width:2.5; }
+    .teacher-toggle.unlocked { width:auto; display:inline-block; }
+    .teacher-toggle.unlocked svg { display:none; }
+    button.secondary { background:#e7eef8; color:#234; border:1px solid var(--line); }
+    button.danger { background:#b42318; }
+    main { max-width:1180px; margin:14px auto 40px; padding:0 20px; }
+    .panel { background:#fff; border:1px solid var(--line); border-radius:8px; padding:18px; }
+    .hidden { display:none !important; }
+    .layout { display:grid; grid-template-columns:minmax(420px, 520px) 1fr; gap:18px; align-items:start; }
+    .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:16px; }
+    .wide { grid-column:1 / -1; }
+    label { display:grid; gap:6px; font-weight:700; color:#27415f; }
+    input, select, textarea { width:100%; min-height:42px; padding:9px 10px; border:1px solid #bfd0e3; border-radius:6px; font:inherit; background:#fff; }
+    textarea { min-height:84px; resize:vertical; }
+    .date-line { display:grid; grid-template-columns:1fr .72fr .72fr; gap:8px; }
+    .hint { color:var(--muted); font-weight:400; font-size:13px; line-height:1.5; }
+    .info, .ok, .danger-box { margin-top:14px; padding:12px; border-radius:8px; line-height:1.7; }
+    .info { background:#eef4fb; border:1px solid var(--line); }
+    .ok { background:#ecfdf3; border:1px solid #b7e4c7; }
+    .danger-box { background:#fff1f2; border:1px solid #fecdd3; }
+    .table-wrap { overflow:auto; border:1px solid var(--line); border-radius:8px; background:#fff; }
+    table { width:100%; border-collapse:collapse; min-width:720px; }
+    th, td { border-bottom:1px solid var(--line); padding:10px; text-align:left; vertical-align:middle; }
+    th { background:var(--blue); color:#fff; white-space:nowrap; }
+    .group-row td { background:#f8fafc; color:#1e3a5f; font-weight:700; text-align:center; }
+    td input[type="checkbox"] { width:20px; min-height:20px; }
+    td input, td select { min-height:34px; padding:6px 8px; }
+    .head { display:flex; justify-content:space-between; gap:12px; align-items:center; margin-bottom:14px; flex-wrap:wrap; }
+    .actions { display:flex; gap:8px; flex-wrap:wrap; }
+    .paper-sheet { background:#fff; border:1px solid var(--line); border-radius:8px; padding:18px; }
+    .paper-sheet h3 { text-align:center; color:#111827; margin-bottom:6px; }
+    .paper-sheet .meta { text-align:center; color:#475569; margin-bottom:14px; }
+    .paper-group { margin-top:14px; }
+    .paper-group-title { border:1px solid #111827; border-bottom:0; background:#f8fafc; padding:8px; text-align:center; font-weight:700; color:#1e3a5f; }
+    .paper-sheet table { min-width:760px; font-size:14px; }
+    .paper-sheet th, .paper-sheet td { border:1px solid #111827; text-align:center; height:36px; padding:8px; }
+    .paper-sheet th { background:#e5edf8; color:#111827; }
+    .paper-sheet td:nth-child(3) { text-align:center; }
+    .paper-sheet td:nth-child(4), .paper-sheet td:nth-child(5), .paper-sheet td:nth-child(6) { text-align:center; }
+    .paper-sheet .group-row td { background:#f8fafc; font-weight:700; text-align:center; }
+    .paper-check { font-size:20px; font-weight:700; line-height:1; }
+    .receipt-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:14px; }
+    .receipt-card { border:1px solid #111827; padding:14px; min-height:178px; break-inside:avoid; page-break-inside:avoid; }
+    .receipt-card h4 { margin:0 0 10px; text-align:center; font-size:17px; }
+    .receipt-row { display:grid; grid-template-columns:84px 1fr; border-top:1px solid #d1d5db; padding:8px 0; }
+    .receipt-row b { color:#1f2937; }
+    .receipt-sign { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:10px; }
+    .receipt-sign span { border-top:1px solid #111827; padding-top:6px; text-align:center; color:#475569; }
+    .receipt-page { width:176mm; max-width:100%; margin:14px auto; border:1px dashed #94a3b8; padding:8mm; break-after:page; page-break-after:always; background:#fff; }
+    .receipt-slip { border:1px solid #111827; min-height:108mm; padding:10mm; display:flex; flex-direction:column; justify-content:space-between; }
+    .receipt-slip + .receipt-slip { margin-top:8mm; }
+    .receipt-slip h4 { margin:0 0 10px; text-align:center; font-size:18px; }
+    .receipt-type { text-align:center; color:#475569; font-weight:700; margin-bottom:8px; }
+    .modal-backdrop { position:fixed; inset:0; background:rgba(15,23,42,.45); display:grid; place-items:center; padding:20px; z-index:20; }
+    .login-modal { width:min(380px, 100%); background:#fff; border-radius:8px; box-shadow:0 24px 70px rgba(15,23,42,.28); padding:22px; }
+    .login-modal h3 { color:#0f376a; margin-bottom:8px; }
+    .login-modal .actions { justify-content:flex-end; margin-top:16px; }
+    .box::after { content:""; display:inline-block; width:18px; height:18px; border:1.8px solid #111827; vertical-align:middle; }
+    .print-actions { display:flex; justify-content:flex-end; margin-top:14px; }
+    @media (max-width:860px) {
+      .hero, .layout { grid-template-columns:1fr; }
+      .jept-word { font-size:68px; }
+      .edition-badge { width:82px; height:82px; }
+      .edition-badge strong { font-size:42px; }
+      .hero-main-title { font-size:30px; }
+      .hero-en { font-size:18px; }
+      .hero-tagline { text-align:left; font-size:18px; }
+      h1 { font-size:24px; }
+      .form-grid { grid-template-columns:1fr; }
+    }
+    @media print {
+      @page { size: B5 portrait; margin:8mm; }
+      body { background:#fff; }
+      body > header, body > nav, main > section:not(#admin), #admin > h2, #admin > p, #admin > .head, #admin > .table-wrap { display:none !important; }
+      main, #admin, #paperChecklist, .paper-sheet { display:block !important; margin:0 !important; padding:0 !important; border:0 !important; box-shadow:none !important; }
+      .receipt-grid { grid-template-columns:1fr 1fr; gap:8mm; }
+      .receipt-page { width:auto; max-width:none; margin:0; border:0; padding:0; }
+      .print-actions { display:none !important; }
+    }
   </style>
 </head>
 <body>
   <header>
     <div class="hero">
-      <div class="top"><div class="logo">JEPT</div><div class="badge"><span id="edition">46th</span></div></div>
-      <h1 id="heroTitle">佳音體系代報名管理</h1>
-      <div class="en">JOY ENGLISH PROFICIENCY TEST ONLINE</div>
-      <div id="heroSubtitle" class="tag">提供家長報名、報名查詢與級數參考。</div>
-      <div class="event-meta">
-        <span>檢定日期：<b id="examDateText">2026/11/22(日)</b></span>
-        <span>報名日期：<b id="signupDateText">2026/08/10(一) 到 2026/08/28(五)</b></span>
+      <div class="brand-panel">
+        <div class="brand-row">
+          <div class="jept-word">JEPT</div>
+          <div class="edition-badge"><strong id="editionNumber">46</strong><small>th</small></div>
+        </div>
+        <h1 id="heroTitle" class="hero-main-title">佳音體系代報名管理</h1>
+        <div class="hero-en">JOY ENGLISH PROFICIENCY TEST ONLINE</div>
+        <p class="hero-tagline" id="heroSubtitle">提供家長報名、老師收件確認、級數維護與佳音格式匯出。</p>
+        <div class="skill-strip">
+          <span><b>LISTENING</b>｜聽力</span>
+          <span><b>READING</b>｜閱讀</span>
+          <span><b>WRITING</b>｜寫作</span>
+          <span><b>SPEAKING</b>｜口說</span>
+        </div>
       </div>
-      <div class="skills"><span>LISTENING 聽力</span><span>READING 閱讀</span><span>WRITING 寫作</span><span>SPEAKING 口說</span></div>
+      <div class="dates">
+        <div><b>檢定日期</b> <span id="examDateText">2026-11-22</span></div>
+        <div><b>報名期間</b> <span id="startDateText">2026-08-10</span> 到 <span id="endDateText">2026-08-28</span></div>
+        <div><b>官方網站</b> <a href="https://jept.joy.com.tw/" target="_blank" rel="noreferrer">jept.joy.com.tw</a></div>
+      </div>
     </div>
   </header>
 
-  <main>
-    <div class="tabs">
-      <button class="tab active" type="button" data-page="apply">家長報名</button>
-      <button class="tab" type="button" data-page="lookup">報名查詢</button>
-    </div>
+  <nav>
+    <button class="tab active" data-tab="parent">家長報名</button>
+    <button class="tab" data-tab="lookup">報名查詢</button>
+    <button class="tab teacher-only locked" data-tab="settings">後台設定</button>
+    <button class="tab teacher-only locked" data-tab="levels">級數與費用</button>
+    <button class="tab teacher-only locked" data-tab="admin">老師/行政收件管理</button>
+    <button class="tab teacher-only locked" data-tab="export">佳音格式</button>
+    <button id="teacherToggle" class="teacher-toggle" type="button" title="老師設定" onclick="toggleTeacherMode()" aria-label="老師設定">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M12 15.5A3.5 3.5 0 1 0 12 8a3.5 3.5 0 0 0 0 7.5Z"></path>
+        <path d="M19.4 15a1.8 1.8 0 0 0 .36 1.98l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.8 1.8 0 0 0-1.98-.36 1.8 1.8 0 0 0-1.1 1.65V21a2 2 0 0 1-4 0v-.09a1.8 1.8 0 0 0-1.18-1.65 1.8 1.8 0 0 0-1.98.36l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.8 1.8 0 0 0 .36-1.98 1.8 1.8 0 0 0-1.65-1.1H2.5a2 2 0 0 1 0-4h.09a1.8 1.8 0 0 0 1.65-1.18 1.8 1.8 0 0 0-.36-1.98l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.8 1.8 0 0 0 1.98.36H8.7A1.8 1.8 0 0 0 9.8 2.5V2.4a2 2 0 0 1 4 0v.09a1.8 1.8 0 0 0 1.1 1.65 1.8 1.8 0 0 0 1.98-.36l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.8 1.8 0 0 0-.36 1.98v.02a1.8 1.8 0 0 0 1.65 1.1h.1a2 2 0 0 1 0 4h-.1A1.8 1.8 0 0 0 19.4 15Z"></path>
+      </svg>
+    </button>
+  </nav>
 
-    <section id="apply" class="layout">
-      <form id="applyForm" class="panel">
+  <div id="teacherLoginModal" class="modal-backdrop hidden">
+    <div class="login-modal">
+      <h3>老師後台登入</h3>
+      <p class="sub">請輸入密碼後開啟後台功能。</p>
+      <label>密碼<input id="teacherPassword" type="password" autocomplete="current-password" onkeydown="if(event.key==='Enter') submitTeacherPassword()"></label>
+      <div id="teacherLoginError" class="danger-box hidden">密碼不正確</div>
+      <div class="actions">
+        <button class="secondary" type="button" onclick="closeTeacherLogin()">取消</button>
+        <button type="button" onclick="submitTeacherPassword()">登入</button>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <section id="parent" class="tab-page layout">
+      <form id="submitForm" class="panel">
         <h2>家長報名表</h2>
-        <p id="applyIntro" class="sub">請依孩子資料填寫。送出後請至佳音櫃台繳交對應報名級數的金額。</p>
-        <div class="grid">
-          <label class="wide">報名分校<select name="campus" required></select></label>
+        <p class="sub">請依學生資料填寫。若有第二位孩子，送出後會自動保留分校與家長聯絡資料。</p>
+        <div class="form-grid">
+          <label class="wide">報名分校<select name="campus" id="parentCampus" onchange="renderParentLevels()" required></select></label>
           <label>中文姓名<input name="chineseName" required autocomplete="off"></label>
-          <label>英文姓名<input name="englishName" required autocomplete="off"></label>
+          <label>英文姓名<input name="englishName" autocomplete="off"></label>
           <label>性別<select name="gender" required><option value="">請選擇</option><option>男</option><option>女</option></select></label>
-          <label>身分證字號<input name="nationalId" maxlength="10" required autocomplete="off"></label>
+          <label>身分證字號<input name="nationalId" autocomplete="off" maxlength="10"></label>
           <label class="wide">西元出生日期
-            <div class="birth">
-              <input name="birthYear" inputmode="numeric" maxlength="4" placeholder="年份">
-              <input name="birthMonth" inputmode="numeric" maxlength="2" placeholder="月份">
-              <input name="birthDay" inputmode="numeric" maxlength="2" placeholder="日期">
+            <div class="date-line">
+              <input id="birthYear" name="birthYear" inputmode="numeric" maxlength="4" placeholder="西元年">
+              <input id="birthMonth" name="birthMonth" inputmode="numeric" maxlength="2" placeholder="月">
+              <input id="birthDay" name="birthDay" inputmode="numeric" maxlength="2" placeholder="日">
             </div>
           </label>
-          <label>就讀年級<select name="schoolGrade" required></select></label>
-          <label>報名級數<select name="levelId" required></select></label>
-          <label>聯絡電話<input name="phone" required autocomplete="off"></label>
-          <label>緊急連絡人手機<input name="emergencyPhone" required autocomplete="off"></label>
-          <label class="wide">家長緊急聯絡人姓名<input name="emergencyName" required autocomplete="off"></label>
+          <label>就讀年級<select name="schoolGrade" required>
+            <option value="">請選擇</option><option>國小一年級</option><option>國小二年級</option><option>國小三年級</option>
+            <option>國小四年級</option><option>國小五年級</option><option>國小六年級</option>
+          </select></label>
+          <label>報考級數<select name="desiredLevelId" id="desiredLevel" required></select></label>
+          <label>聯絡電話<input id="phone" name="phone" inputmode="tel" required></label>
+          <label>家長緊急聯絡人姓名<input name="emergencyName" required></label>
+          <label>家長緊急聯絡人手機<input id="emergencyPhone" name="emergencyPhone" inputmode="tel" required></label>
         </div>
-        <div class="actions"><button type="submit">送出報名</button><button class="secondary" type="reset">清空資料</button></div>
-        <div id="applyMsg" class="info hidden"></div>
-        <p class="privacy">個資安全：本頁不會把身分證、生日、電話等資料存在網頁程式碼或瀏覽器 localStorage。正式收件必須連接公司核准的 HTTPS 安全後端。</p>
+        <div class="actions" style="margin-top:16px">
+          <button type="submit">送出報名</button>
+          <button class="secondary" type="reset">清空資料</button>
+        </div>
+        <div id="successBox" class="ok hidden"></div>
       </form>
 
       <aside class="panel">
         <h2>級數參考表</h2>
-        <p class="sub">家長選擇分校後，會顯示該分校目前開放的級數與費用。</p>
-        <table id="levelTable"></table>
+        <p class="sub">會依家長選擇的分校顯示不同級數、教材、班級與費用。</p>
+        <div class="table-wrap"><table id="levelTable"></table></div>
       </aside>
     </section>
 
-    <section id="lookup" class="panel hidden">
+    <section id="lookup" class="tab-page panel hidden">
       <h2>家長報名查詢</h2>
       <p class="sub">用孩子中文姓名與聯絡電話後三碼查詢。</p>
-      <form id="lookupForm" class="grid">
-        <label>分校<select name="campus"></select></label>
-        <label>孩子中文姓名<input name="chineseName" required autocomplete="off"></label>
-        <label>聯絡電話後三碼<input name="phoneLast3" required maxlength="3" inputmode="numeric" autocomplete="off"></label>
-        <div class="wide actions"><button type="submit">查詢</button></div>
-      </form>
-      <div id="lookupMsg" class="info hidden"></div>
+      <div class="form-grid">
+        <label>分校<select id="lookupCampus"></select></label>
+        <label>孩子中文姓名<input id="lookupName"></label>
+        <label>聯絡電話後三碼<input id="lookupPhone" inputmode="numeric" maxlength="3"></label>
+      </div>
+      <div class="actions" style="margin-top:14px"><button type="button" onclick="lookupRegistration()">查詢</button></div>
+      <div id="lookupResult" class="info hidden"></div>
+    </section>
+
+    <section id="settings" class="tab-page panel hidden">
+      <h2>後台設定</h2>
+      <p class="sub">每一屆主標、日期與說明文字可以由老師調整。</p>
+      <div class="form-grid">
+        <label>屆數<input id="setEdition" type="number" min="1" max="99"></label>
+        <label>系統標題<input id="setTitle"></label>
+        <label>副標題<input id="setSubtitle"></label>
+        <label>檢定日期<input id="setExam" type="date"></label>
+        <label>報名開始<input id="setStart" type="date"></label>
+        <label>報名截止<input id="setEnd" type="date"></label>
+        <label class="wide">家長端說明<textarea id="setNotice"></textarea></label>
+        <label class="wide">個資安全提醒<textarea id="setPrivacy"></textarea></label>
+      </div>
+      <div class="actions" style="margin-top:14px"><button onclick="saveSettings()">儲存設定</button></div>
+    </section>
+
+    <section id="levels" class="tab-page panel hidden">
+      <div class="head">
+        <div><h2>級數與費用</h2><p class="sub">不同分校可以維護不同的級數參考表。</p></div>
+        <div class="actions"><select id="levelCampus" onchange="render()"></select><button onclick="addLevel()">新增級數</button></div>
+      </div>
+      <div class="table-wrap"><table id="levelEditTable"></table></div>
+    </section>
+
+    <section id="admin" class="tab-page panel hidden">
+      <div class="head">
+        <div><h2>老師/行政收件管理</h2><p class="sub">依老師確認級數排序，供收件、勾選資料與紙本列印。</p></div>
+        <div class="actions">
+          <select id="adminCampus" onchange="render()"></select>
+          <button class="secondary" type="button" onclick="selectPrintRows('unpaidUnprinted')">選取未繳費未印</button>
+          <button class="secondary" type="button" onclick="selectPrintRows('none')">清除勾選</button>
+          <button class="secondary" type="button" onclick="printAdminChecklist()">匯出紙本收件表</button>
+          <button class="secondary" type="button" onclick="printReceipts()">匯出收執聯</button>
+          <button class="danger" type="button" onclick="clearCampusRegistrations()">清空本分校報名資料</button>
+        </div>
+      </div>
+      <div id="adminMessage" class="info hidden"></div>
+      <div class="table-wrap"><table id="adminTable"></table></div>
+      <div id="paperChecklist" class="hidden" style="margin-top:18px"></div>
+    </section>
+
+    <section id="export" class="tab-page panel hidden">
+      <div class="head">
+        <div><h2>佳音格式</h2><p class="sub">正式版會把完整個資限制在授權後台匯出，不放在前台程式碼。</p></div>
+        <div class="actions"><select id="exportCampus" onchange="render()"></select><button class="secondary" onclick="copyExcel()">複製到 Excel</button></div>
+      </div>
+      <div class="table-wrap"><table id="exportTable"></table></div>
     </section>
   </main>
 
   <script>
-    // 每一屆要修改的資料集中放這裡。
-    // 之後只要改這幾行，再重新上傳 index.html 到 GitHub，就能更新前台。
-    let siteSettings = {
-      edition: "46th",
-      pageTitle: "佳音體系代報名管理",
-      heroTitle: "佳音體系代報名管理",
-      heroSubtitle: "提供家長報名、報名查詢與級數參考。",
-      examDate: "2026/11/22(日)",
-      signupDate: "2026/08/10(一) 到 2026/08/28(五)",
-      applyIntro: "請依孩子資料填寫。送出後請至佳音櫃台繳交對應報名級數的金額。"
-    };
-    const FORM_ENDPOINT = "https://script.google.com/macros/s/AKfycbwv00_1dh0vd47VgyQMGPzxk13Wr0M62T8Phz5k1gFzarWF0OEfYJwwmDWYVF8rrFsA/exec";
-    const LOOKUP_ENDPOINT = "https://script.google.com/macros/s/AKfycbwv00_1dh0vd47VgyQMGPzxk13Wr0M62T8Phz5k1gFzarWF0OEfYJwwmDWYVF8rrFsA/exec";
+    const key = "jept-online-full-v1";
+    const API_ENDPOINT = "https://script.google.com/macros/s/AKfycbwv00_1dh0vd47VgyQMGPzxk13Wr0M62T8Phz5k1gFzarWF0OEfYJwwmDWYVF8rrFsA/exec";
     const campuses = [
-      ["yp","永平分校"],["yh","永和分校"],["qs","清水分校"],["jc","江翠分校"]
+      { id:"yp", name:"永平分校", code:"BB010" },
+      { id:"yh", name:"永和分校", code:"BB011" },
+      { id:"qs", name:"清水分校", code:"BB012" },
+      { id:"jc", name:"江翠分校", code:"BB013" }
     ];
-    const levels = {
-      yp:[["1","第一級","聽力、閱讀","TJ1~4","TQ、TK、TV、TG",850],["2","第二級","聽力、閱讀","TJ1~8","TW、TF、TN、TI",850],["3","第三級","聽力、閱讀","MJ1~2","X",850],["4","第四級","聽力、閱讀","MJ1~4","MZ",850],["5","第五級","聽力、閱讀、寫作","MJ1~7","ME、MT、MU",1100],["6","第六級","聽力、閱讀、寫作","MJ1~10","MA、MCB、MP、MXA、MXB",1100],["7","第七級","聽力、閱讀、寫作、口說","MJ1~13","MB、MLA、MLB",1250],["8","第八級","聽力、閱讀、寫作、口說","MJ1~16","X",1250]]
+    const defaults = {
+      settings:{
+        edition:"46",
+        title:"佳音體系代報名管理",
+        subtitle:"提供家長報名、老師收件確認、級數維護與佳音格式匯出。",
+        examDate:"2026-11-22",
+        startDate:"2026-08-10",
+        endDate:"2026-08-28",
+        notice:"報名資料送出後，請等待老師確認級數與收件狀態。",
+        privacy:"正式上線時，完整身分證、生日與電話只會送到安全後台，不會放在前台程式碼、網址或公開頁面。"
+      },
+      lastGuardian:null,
+      levels:[
+        ["yp-lv1","yp","第一級","聽力、閱讀","TJ1~4","TQ、TK、TV、TG",850,true],
+        ["yp-lv2","yp","第二級","聽力、閱讀","TJ1~8","TW、TF、TN、TI",850,true],
+        ["yp-lv3","yp","第三級","聽力、閱讀","MJ1~2","X",850,true],
+        ["yp-lv4","yp","第四級","聽力、閱讀","MJ1~4","MZ",850,true],
+        ["yp-lv5","yp","第五級","聽力、閱讀、寫作","MJ1~7","ME、MT、MU",1100,true],
+        ["yp-lv6","yp","第六級","聽力、閱讀、寫作","MJ1~10","MA、MCB、MP、MXA、MXB",1100,true],
+        ["yp-lv7","yp","第七級","聽力、閱讀、寫作、口說","MJ1~13","MB、MLA、MLB",1250,true],
+        ["yp-lv8","yp","第八級","聽力、閱讀、寫作、口說","MJ1~16","X",1250,true],
+
+        ["yh-lv1","yh","第一級","聽力、閱讀","TJ1~4","TQ、TK、TV、TG",850,true],
+        ["yh-lv2","yh","第二級","聽力、閱讀","TJ1~8","TW、TF、TN、TI",850,true],
+        ["yh-lv3","yh","第三級","聽力、閱讀","MJ1~2","X",850,true],
+        ["yh-lv4","yh","第四級","聽力、閱讀","MJ1~4","MZ",850,true],
+        ["yh-lv5","yh","第五級","聽力、閱讀、寫作","MJ1~7","ME、MT、MU",1100,true],
+        ["yh-lv6","yh","第六級","聽力、閱讀、寫作","MJ1~10","MA、MCB、MP、MXA、MXB",1100,true],
+        ["yh-lv7","yh","第七級","聽力、閱讀、寫作、口說","MJ1~13","MB、MLA、MLB",1250,true],
+        ["yh-lv8","yh","第八級","聽力、閱讀、寫作、口說","MJ1~16","X",1250,true],
+
+        ["qs-lv1","qs","第一級","聽力、閱讀","TJ1~4","TQ、TK、TV、TG",850,true],
+        ["qs-lv2","qs","第二級","聽力、閱讀","TJ1~8","TW、TF、TN、TI",850,true],
+        ["qs-lv3","qs","第三級","聽力、閱讀","MJ1~2","X",850,true],
+        ["qs-lv4","qs","第四級","聽力、閱讀","MJ1~4","MZ",850,true],
+        ["qs-lv5","qs","第五級","聽力、閱讀、寫作","MJ1~7","ME、MT、MU",1100,true],
+        ["qs-lv6","qs","第六級","聽力、閱讀、寫作","MJ1~10","MA、MCB、MP、MXA、MXB",1100,true],
+        ["qs-lv7","qs","第七級","聽力、閱讀、寫作、口說","MJ1~13","MB、MLA、MLB",1250,true],
+        ["qs-lv8","qs","第八級","聽力、閱讀、寫作、口說","MJ1~16","X",1250,true],
+
+        ["jc-lv1","jc","第一級","聽力、閱讀","TJ1~4","TQ、TK、TV、TG",850,true],
+        ["jc-lv2","jc","第二級","聽力、閱讀","TJ1~8","TW、TF、TN、TI",850,true],
+        ["jc-lv3","jc","第三級","聽力、閱讀","MJ1~2","X",850,true],
+        ["jc-lv4","jc","第四級","聽力、閱讀","MJ1~4","MZ",850,true],
+        ["jc-lv5","jc","第五級","聽力、閱讀、寫作","MJ1~7","ME、MT、MU",1100,true],
+        ["jc-lv6","jc","第六級","聽力、閱讀、寫作","MJ1~10","MA、MCB、MP、MXA、MXB",1100,true],
+        ["jc-lv7","jc","第七級","聽力、閱讀、寫作、口說","MJ1~13","MB、MLA、MLB",1250,true],
+        ["jc-lv8","jc","第八級","聽力、閱讀、寫作、口說","MJ1~16","X",1250,true]
+      ],
+      regs:[]
     };
-    ["yh","qs","jc"].forEach(id => levels[id] = levels.yp.map(row => [...row]));
-    const $ = s => document.querySelector(s);
-    const $$ = s => [...document.querySelectorAll(s)];
-    const esc = v => String(v ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-    const campusName = id => (campuses.find(c => c[0] === id) || campuses[0])[1];
-    const levelInfo = (campus,id) => (levels[campus] || levels.yp).find(l => l[0] === id);
+    let state = JSON.parse(localStorage.getItem(key) || "null") || structuredClone(defaults);
+    let emergencyPhoneChanged = false;
+    let teacherUnlocked = sessionStorage.getItem("jeptTeacherUnlocked") === "yes";
 
-    function renderSiteSettings(){
-      document.title = siteSettings.pageTitle;
-      $("#edition").textContent = siteSettings.edition;
-      $("#heroTitle").innerHTML = esc(siteSettings.heroTitle).replace("線上", '<span class="yellow">線上</span>');
-      $("#heroSubtitle").textContent = siteSettings.heroSubtitle;
-      $("#examDateText").textContent = siteSettings.examDate;
-      $("#signupDateText").textContent = siteSettings.signupDate;
-      $("#applyIntro").textContent = siteSettings.applyIntro;
+    if (state.settings?.title === "佳音英語文能力線上檢定") {
+      state.settings.edition = defaults.settings.edition;
+      state.settings.title = defaults.settings.title;
+      state.settings.subtitle = defaults.settings.subtitle;
+      localStorage.setItem(key, JSON.stringify(state));
     }
 
-    function fillSelects(){
-      const campusHtml = campuses.map(c => `<option value="${c[0]}">${c[1]}</option>`).join("");
-      $$("select[name=campus]").forEach(s => s.innerHTML = campusHtml);
-      $("select[name=schoolGrade]").innerHTML = ["一年級","二年級","三年級","四年級","五年級","六年級"].map(g => `<option>${g}</option>`).join("");
-      renderLevels();
-    }
-    function renderLevels(){
-      const campus = $("#applyForm select[name=campus]").value || "yp";
-      $("select[name=levelId]").innerHTML = levels[campus].map(l => `<option value="${l[0]}">${l[1]} ${l[3]} - ${l[5]}元</option>`).join("");
-      $("#levelTable").innerHTML = `<thead><tr><th>級數</th><th>檢定項目</th><th>教材</th><th>班級</th><th>費用</th></tr></thead><tbody>${levels[campus].map(l => `<tr><td>${l[1]}</td><td>${l[2]}</td><td>${l[3]}</td><td>${l[4]}</td><td>${l[5]}元</td></tr>`).join("")}</tbody>`;
-    }
-    async function submitRegistration(url, payload){
+    const $ = id => document.getElementById(id);
+    function api(action, payload = {}){
       return new Promise(resolve => {
-        const callback = "jeptSubmitCallback" + Date.now() + Math.random().toString(16).slice(2);
+        const callback = "jeptApiCallback" + Date.now() + Math.random().toString(16).slice(2);
         const script = document.createElement("script");
-        const done = () => {
+        const done = data => {
           delete window[callback];
           script.remove();
-          resolve({ ok:true });
+          resolve(data || { ok:true });
         };
         window[callback] = done;
-        const params = new URLSearchParams({
-          action:"submit",
-          callback,
-          payload:JSON.stringify(payload)
-        });
-        script.onload = done;
-        script.onerror = done;
-        script.src = `${url}?${params.toString()}`;
-        document.body.appendChild(script);
-        setTimeout(done, 3500);
-      });
-    }
-    function getJsonp(url, payload){
-      return new Promise((resolve, reject) => {
-        const callback = "jeptCallback" + Date.now() + Math.random().toString(16).slice(2);
-        const script = document.createElement("script");
-        const params = new URLSearchParams({ ...payload, callback });
-        window[callback] = data => {
-          delete window[callback];
-          script.remove();
-          resolve(data);
-        };
-        script.onerror = () => {
-          delete window[callback];
-          script.remove();
-          reject(new Error("查詢失敗"));
-        };
-        script.src = `${url}?${params.toString()}`;
+        const params = new URLSearchParams({ action, callback, payload:JSON.stringify(payload) });
+        script.onerror = () => done({ ok:false, message:"網路連線失敗" });
+        script.src = `${API_ENDPOINT}?${params.toString()}`;
         document.body.appendChild(script);
       });
     }
-    async function loadSiteSettings(){
-      if (!LOOKUP_ENDPOINT) return;
-      try {
-        const config = await getJsonp(LOOKUP_ENDPOINT, { action:"config" });
-        siteSettings = { ...siteSettings, ...config };
-        renderSiteSettings();
-      } catch {
-        renderSiteSettings();
+    function statusText(field, value){
+      if (field === "healthCard") return value ? "已確認" : "未確認";
+      if (field === "headshot") return value ? "已收" : "未收";
+      if (field === "paid") return value ? "已繳" : "未繳";
+      if (field === "receiptPrinted") return value ? "已列印" : "未列印";
+      return value || "";
+    }
+    function boolFromStatus(value, yes){ return String(value || "") === yes; }
+    function backendToReg(row){
+      const finalLevelId = row.finalLevelId || "";
+      const desiredLevelId = row.desiredLevelId || "";
+      return {
+        id: row.id || "",
+        campus: row.campus || "yp",
+        chineseName: row.chineseName || "",
+        englishName: row.englishName || "",
+        gender: row.gender || "",
+        nationalId: row.nationalId || "",
+        birthDate: row.birthDate || "",
+        schoolGrade: row.schoolGrade || "",
+        phone: row.phone || "",
+        emergencyName: row.emergencyName || "",
+        emergencyPhone: row.emergencyPhone || "",
+        className: row.className || "",
+        desiredLevelId,
+        finalLevelId,
+        healthCard: boolFromStatus(row.healthCard, "已確認"),
+        headshot: boolFromStatus(row.headshot, "已收"),
+        paid: boolFromStatus(row.paid, "已繳"),
+        receiptPrinted: boolFromStatus(row.receiptPrinted, "已列印"),
+        printSelected: false,
+        status: row.status || "待老師確認"
+      };
+    }
+    function regPayload(reg){
+      const desired = levelInfo(reg.desiredLevelId);
+      const final = levelInfo(reg.finalLevelId);
+      const active = final || desired;
+      return {
+        id: reg.id,
+        campus: reg.campus,
+        campusName: campus(reg.campus).name,
+        chineseName: reg.chineseName,
+        englishName: reg.englishName,
+        gender: reg.gender,
+        nationalId: reg.nationalId,
+        birthDate: reg.birthDate,
+        schoolGrade: reg.schoolGrade,
+        phone: reg.phone,
+        emergencyPhone: reg.emergencyPhone,
+        emergencyName: reg.emergencyName,
+        desiredLevelId: reg.desiredLevelId,
+        levelName: desired ? desired[2] : "",
+        material: active ? active[4] : "",
+        className: active ? active[5] : reg.className,
+        fee: active ? active[6] : "",
+        finalLevelId: reg.finalLevelId,
+        finalLevelName: final ? final[2] : "",
+        healthCard: statusText("healthCard", reg.healthCard),
+        headshot: statusText("headshot", reg.headshot),
+        paid: statusText("paid", reg.paid),
+        receiptPrinted: statusText("receiptPrinted", reg.receiptPrinted),
+        status: reg.status
+      };
+    }
+    async function loadOnlineData(){
+      const [configResult, listResult] = await Promise.all([api("config"), api("list")]);
+      if (configResult && configResult.ok && configResult.config) {
+        const config = { ...configResult.config };
+        if (config.levelsJson) {
+          try { state.levels = JSON.parse(config.levelsJson); } catch (error) {}
+          delete config.levelsJson;
+        }
+        state.settings = { ...state.settings, ...config };
+      }
+      if (listResult && listResult.ok && Array.isArray(listResult.registrations)) {
+        state.regs = listResult.registrations.map(backendToReg);
+      }
+      save();
+    }
+    async function syncRegistration(reg){
+      if (!reg || !reg.id) return;
+      await api("update", regPayload(reg));
+    }
+    async function syncConfigAndLevels(){
+      const config = { ...state.settings, levelsJson: JSON.stringify(state.levels) };
+      await api("saveConfig", { config });
+    }
+    function save(){ localStorage.setItem(key, JSON.stringify(state)); render(); }
+    function campus(id){ return campuses.find(c => c.id === id) || campuses[0]; }
+    function campusOptions(selected){ return campuses.map(c => `<option value="${c.id}" ${selected===c.id?"selected":""}>${c.name}</option>`).join(""); }
+    function levelsFor(campusId){ return state.levels.filter(l => l[1] === campusId); }
+    function openLevelsFor(campusId){ return levelsFor(campusId).filter(l => l[7]); }
+    function levelInfo(id){ return state.levels.find(x => x[0] === id); }
+    function levelName(id){ const l = state.levels.find(x => x[0] === id); return l ? l[2] : "尚未確認"; }
+    function levelDisplay(id){ const l = levelInfo(id); return l ? `${l[2]} ${l[4]}` : "尚未確認"; }
+    function levelClass(id){ const l = levelInfo(id); return l ? l[5] : ""; }
+    function levelFee(id){ const l = levelInfo(id); return l ? l[6] : ""; }
+    function levelSortValue(id){ const index = state.levels.findIndex(x => x[0] === id); return index < 0 ? 9999 : index; }
+    function maskName(v){ return !v ? "" : v.length === 1 ? v + "*" : v[0] + "*".repeat(v.length - 1); }
+    function last3(v){ return String(v || "").replace(/\D/g, "").slice(-3); }
+    function formatPhoneForExcel(v){
+      const d = String(v || "").replace(/\D/g, "");
+      if (d.length === 10) return `${d.slice(0,4)}-${d.slice(4)}`;
+      return String(v || "");
+    }
+    function esc(value){ return String(value || "").replace(/[&<>"']/g, ch => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[ch])); }
+    function table(headers, rows){ return `<thead><tr>${headers.map(h=>`<th>${h}</th>`).join("")}</tr></thead><tbody>${rows.join("")}</tbody>`; }
+    function showAdminMessage(message){
+      const box = $("adminMessage");
+      if (!box) return;
+      box.textContent = message;
+      box.classList.remove("hidden");
+    }
+    function renderHeroTitle(){
+      const title = state.settings.title || "佳音英語文能力線上檢定";
+      $("heroTitle").innerHTML = esc(title).replace("線上", '<span class="yellow">線上</span>');
+    }
+    function setActiveTab(tabId){
+      const tabButton = document.querySelector(`.tab[data-tab="${tabId}"]`);
+      if (!tabButton) return;
+      if (tabButton.classList.contains("teacher-only") && !teacherUnlocked) return;
+      document.querySelectorAll(".tab[data-tab]").forEach(x => x.classList.remove("active"));
+      document.querySelectorAll(".tab-page").forEach(x => x.classList.add("hidden"));
+      tabButton.classList.add("active");
+      $(tabId).classList.remove("hidden");
+    }
+    function refreshTeacherLock(){
+      document.querySelectorAll(".teacher-only").forEach(el => el.classList.toggle("locked", !teacherUnlocked));
+      $("teacherToggle").classList.toggle("unlocked", teacherUnlocked);
+      if (teacherUnlocked) $("teacherToggle").textContent = "後台已開啟";
+      if (!teacherUnlocked && !$("teacherToggle").querySelector("svg")) {
+        $("teacherToggle").innerHTML = `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 15.5A3.5 3.5 0 1 0 12 8a3.5 3.5 0 0 0 0 7.5Z"></path><path d="M19.4 15a1.8 1.8 0 0 0 .36 1.98l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.8 1.8 0 0 0-1.98-.36 1.8 1.8 0 0 0-1.1 1.65V21a2 2 0 0 1-4 0v-.09a1.8 1.8 0 0 0-1.18-1.65 1.8 1.8 0 0 0-1.98.36l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.8 1.8 0 0 0 .36-1.98 1.8 1.8 0 0 0-1.65-1.1H2.5a2 2 0 0 1 0-4h.09a1.8 1.8 0 0 0 1.65-1.18 1.8 1.8 0 0 0-.36-1.98l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.8 1.8 0 0 0 1.98.36H8.7A1.8 1.8 0 0 0 9.8 2.5V2.4a2 2 0 0 1 4 0v.09a1.8 1.8 0 0 0 1.1 1.65 1.8 1.8 0 0 0 1.98-.36l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.8 1.8 0 0 0-.36 1.98v.02a1.8 1.8 0 0 0 1.65 1.1h.1a2 2 0 0 1 0 4h-.1A1.8 1.8 0 0 0 19.4 15Z"></path></svg>`;
+      }
+      if (!teacherUnlocked && !["parent", "lookup"].includes(document.querySelector(".tab.active")?.dataset.tab)) setActiveTab("parent");
+    }
+    function openTeacherLogin(){
+      $("teacherLoginError").classList.add("hidden");
+      $("teacherPassword").value = "";
+      $("teacherLoginModal").classList.remove("hidden");
+      setTimeout(() => $("teacherPassword").focus(), 0);
+    }
+    function closeTeacherLogin(){
+      $("teacherLoginModal").classList.add("hidden");
+    }
+    function submitTeacherPassword(){
+      if ($("teacherPassword").value === "kiki1997") {
+        teacherUnlocked = true;
+        sessionStorage.setItem("jeptTeacherUnlocked", "yes");
+        closeTeacherLogin();
+        refreshTeacherLock();
+        setActiveTab("settings");
+      } else {
+        $("teacherLoginError").classList.remove("hidden");
       }
     }
-    $("#applyForm").addEventListener("submit", async e => {
-      e.preventDefault();
-      const fd = new FormData(e.currentTarget);
-      const payload = Object.fromEntries(fd.entries());
-      payload.birthDate = `${payload.birthYear}-${payload.birthMonth}-${payload.birthDay}`;
-      payload.campusName = campusName(payload.campus);
-      const lv = levelInfo(payload.campus, payload.levelId);
-      payload.levelName = lv ? lv[1] : "";
-      payload.material = lv ? lv[3] : "";
-      payload.fee = lv ? lv[5] : "";
-      const msg = $("#applyMsg");
-      msg.classList.remove("hidden","warn");
-      if (!FORM_ENDPOINT) {
-        msg.classList.add("warn");
-        msg.textContent = "目前是安全上線前台版，尚未連接公司安全收件後端，所以不會保存這筆個資。請先請資訊端提供 HTTPS 收件網址。";
+    function toggleTeacherMode(){
+      if (teacherUnlocked) {
+        teacherUnlocked = false;
+        sessionStorage.removeItem("jeptTeacherUnlocked");
+        refreshTeacherLock();
+        setActiveTab("parent");
         return;
       }
-      try {
-        await submitRegistration(FORM_ENDPOINT, payload);
-        msg.textContent = `報名資料已送出。請至佳音櫃台繳交 ${payload.levelName} 報名費 ${payload.fee} 元。若試算表未立即出現，請稍候重新整理。`;
-        e.currentTarget.reset();
-        renderLevels();
-      } catch {
-        msg.classList.add("warn");
-        msg.textContent = "送出失敗，請稍後再試或洽佳音櫃台。";
-      }
+      openTeacherLogin();
+    }
+
+    document.querySelectorAll(".tab").forEach(btn => btn.onclick = () => {
+      if (btn.dataset.tab) setActiveTab(btn.dataset.tab);
     });
-    $("#lookupForm").addEventListener("submit", async e => {
+
+    $("birthYear").addEventListener("input", e => {
+      e.target.value = e.target.value.replace(/\D/g, "").slice(0,4);
+      if (e.target.value.length === 4) $("birthMonth").focus();
+    });
+    $("birthMonth").addEventListener("input", e => {
+      e.target.value = e.target.value.replace(/\D/g, "").slice(0,2);
+      if (e.target.value.length === 2) $("birthDay").focus();
+    });
+    $("birthDay").addEventListener("input", e => e.target.value = e.target.value.replace(/\D/g, "").slice(0,2));
+    $("emergencyPhone").addEventListener("input", () => emergencyPhoneChanged = true);
+    $("phone").addEventListener("input", e => {
+      if (!emergencyPhoneChanged || !$("emergencyPhone").value) $("emergencyPhone").value = e.target.value;
+    });
+
+    $("submitForm").onsubmit = async e => {
       e.preventDefault();
-      const fd = new FormData(e.currentTarget);
-      const payload = Object.fromEntries(fd.entries());
-      const msg = $("#lookupMsg");
-      msg.classList.remove("hidden","warn");
-      if (!LOOKUP_ENDPOINT) {
-        msg.classList.add("warn");
-        msg.textContent = "查詢功能尚未連接公司安全後端。正式版會由後端查詢，不會在前台公開個資資料庫。";
+      const data = new FormData(e.target);
+      const y = data.get("birthYear"), m = data.get("birthMonth"), d = data.get("birthDay");
+      const birthDate = y && m && d ? `${y.padStart(4,"0")}-${m.padStart(2,"0")}-${d.padStart(2,"0")}` : "";
+      const selectedLevelId = data.get("desiredLevelId");
+      const selectedLevel = levelInfo(selectedLevelId);
+      const pendingReg = {
+        id:"",
+        campus:data.get("campus"),
+        chineseName:data.get("chineseName"),
+        englishName:data.get("englishName"),
+        gender:data.get("gender"),
+        nationalId:data.get("nationalId"),
+        birthDate,
+        schoolGrade:data.get("schoolGrade"),
+        phone:data.get("phone"),
+        emergencyName:data.get("emergencyName"),
+        emergencyPhone:data.get("emergencyPhone"),
+        className:selectedLevel ? selectedLevel[5] : "",
+        desiredLevelId:selectedLevelId,
+        finalLevelId:"",
+        healthCard:false,
+        headshot:false,
+        paid:false,
+        receiptPrinted:false,
+        printSelected:true,
+        status:"待老師確認"
+      };
+      const submitButton = e.target.querySelector('button[type="submit"]');
+      submitButton.disabled = true;
+      submitButton.textContent = "送出中...";
+      try {
+        const result = await api("submit", regPayload(pendingReg));
+        if (!result || !result.ok) throw new Error(result?.message || "送出失敗");
+        pendingReg.id = result.id;
+        state.regs.push(pendingReg);
+        state.lastGuardian = {
+          campus:data.get("campus") || "yp",
+          phone:data.get("phone") || "",
+          emergencyName:data.get("emergencyName") || "",
+          emergencyPhone:data.get("emergencyPhone") || ""
+        };
+        e.target.reset();
+        e.target.campus.value = state.lastGuardian.campus;
+        e.target.phone.value = state.lastGuardian.phone;
+        e.target.emergencyName.value = state.lastGuardian.emergencyName;
+        e.target.emergencyPhone.value = state.lastGuardian.emergencyPhone;
+        emergencyPhoneChanged = false;
+        const amount = levelFee(selectedLevelId);
+        $("successBox").textContent = `報名已送出，報名編號：${pendingReg.id}。請至佳音櫃檯繳交${amount ? amount + "元" : "對應級數金額"}，老師確認後可用姓名與電話後三碼查詢狀態。`;
+        $("successBox").className = "info";
+        $("successBox").classList.remove("hidden");
+        save();
+      } catch (error) {
+        $("successBox").textContent = "送出失敗，請稍後再試或洽佳音櫃檯。";
+        $("successBox").className = "danger-box";
+        $("successBox").classList.remove("hidden");
+      } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = "送出報名";
+      }
+    };
+
+    function lookupRegistration(){
+      const reg = state.regs.find(r => r.campus === $("lookupCampus").value && r.chineseName.trim() === $("lookupName").value.trim() && last3(r.phone) === $("lookupPhone").value.trim());
+      $("lookupResult").classList.remove("hidden");
+      if (!reg) {
+        $("lookupResult").className = "danger-box";
+        $("lookupResult").textContent = "查不到報名資料，請確認分校、孩子姓名與電話後三碼。";
         return;
       }
-      try {
-        const data = await getJsonp(LOOKUP_ENDPOINT, { action:"lookup", ...payload });
-        if (!data.ok) throw new Error(data.message || "查無資料");
-        msg.innerHTML = `查詢結果<br>分校：${esc(data.campusName || "")}<br>學生姓名：${esc(data.studentName || "")}<br>報名級數：${esc(data.levelName || "")}<br>教材：${esc(data.material || "")}<br>健保卡：${esc(data.healthCard || "未確認")} / 大頭照：${esc(data.headshot || "未收")} / 費用：${esc(data.paid || "未繳")}`;
-      } catch {
-        msg.classList.add("warn");
-        msg.textContent = "查詢失敗，請確認資料或洽佳音櫃台。";
+      $("lookupResult").className = "info";
+      const lookupLevelId = reg.finalLevelId || reg.desiredLevelId;
+      const lookupLevel = levelInfo(lookupLevelId);
+      $("lookupResult").innerHTML = `
+        <strong>查詢結果</strong><br>
+        分校：${esc(campus(reg.campus).name)}<br>
+        學生姓名：${esc(maskName(reg.chineseName))}<br>
+        報名級數：${esc(levelName(lookupLevelId))}<br>
+        教材：${esc(lookupLevel ? lookupLevel[4] : "尚未確認")}<br>
+        狀態：${esc(reg.status)}<br>
+        健保卡：${reg.healthCard ? "已確認" : "未確認"} / 大頭照：${reg.headshot ? "已收" : "未收"} / 費用：${reg.paid ? "已繳" : "未繳"}
+      `;
+    }
+
+    async function saveSettings(){
+      state.settings = {
+        edition:$("setEdition").value || "45", title:$("setTitle").value, subtitle:$("setSubtitle").value, examDate:$("setExam").value,
+        startDate:$("setStart").value, endDate:$("setEnd").value, notice:$("setNotice").value, privacy:$("setPrivacy").value
+      };
+      save();
+      await syncConfigAndLevels();
+      showAdminMessage("後台設定已同步到 Google 設定表。");
+    }
+
+    async function addLevel(){
+      const c = $("levelCampus").value || "yp";
+      state.levels.push(["lv" + Date.now(), c, "新級數", "聽力、閱讀", "", "", 850, true]);
+      save();
+      await syncConfigAndLevels();
+    }
+    async function updateLevel(id,j,v){
+      const item = state.levels.find(l => l[0] === id);
+      if (!item) return;
+      item[j] = j === 6 ? Number(v) : j === 7 ? v.checked : v;
+      save();
+      await syncConfigAndLevels();
+    }
+    async function deleteLevel(id){
+      state.levels = state.levels.filter(x => x[0] !== id);
+      save();
+      await syncConfigAndLevels();
+    }
+    async function updateReg(i,field,v){
+      const isCheckbox = ["healthCard","headshot","paid","receiptPrinted","printSelected"].includes(field);
+      state.regs[i][field] = isCheckbox ? v.checked : v;
+      const item = state.regs[i];
+      const selectedLevel = levelInfo(item.finalLevelId || item.desiredLevelId);
+      if (field === "finalLevelId" && selectedLevel) {
+        item.className = selectedLevel[5];
       }
-    });
-    $$(".tab").forEach(btn => btn.addEventListener("click", () => {
-      $$(".tab").forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      $$("main section").forEach(s => s.classList.add("hidden"));
-      $("#" + btn.dataset.page).classList.remove("hidden");
-    }));
-    $("#applyForm select[name=campus]").addEventListener("change", renderLevels);
-    const phone = $("input[name=phone]");
-    const emergencyPhone = $("input[name=emergencyPhone]");
-    let emergencyEdited = false;
-    emergencyPhone.addEventListener("input", () => emergencyEdited = true);
-    phone.addEventListener("input", () => { if (!emergencyEdited) emergencyPhone.value = phone.value; });
-    [["birthYear","birthMonth"],["birthMonth","birthDay"]].forEach(([a,b]) => {
-      const input = $(`input[name=${a}]`);
-      input.addEventListener("input", () => { if (input.value.length >= input.maxLength) $(`input[name=${b}]`).focus(); });
-    });
-    renderSiteSettings();
-    loadSiteSettings();
-    fillSelects();
+      if (["healthCard","headshot","paid","finalLevelId"].includes(field)) {
+        if (item.healthCard && item.headshot && item.paid) item.status = "可送件";
+        else if (!item.paid) item.status = "待繳費";
+        else item.status = "待補件";
+      }
+      save();
+      if (field !== "printSelected") await syncRegistration(item);
+    }
+    async function deleteRegistration(i){
+      const item = state.regs[i];
+      if (!item) return;
+      if (!confirm(`確定要刪除 ${item.chineseName || "這位學生"} 的報名資料嗎？`)) return;
+      if (item.id) await api("delete", { id:item.id });
+      state.regs.splice(i, 1);
+      save();
+      showAdminMessage("資料已刪除，並同步到 Google 試算表。");
+    }
+    async function clearCampusRegistrations(){
+      const selected = $("adminCampus").value || "yp";
+      const campusName = campus(selected).name;
+      const count = state.regs.filter(r => r.campus === selected).length;
+      if (!count) {
+        alert(`${campusName} 目前沒有報名資料。`);
+        return;
+      }
+      if (!confirm(`確定要清空 ${campusName} 的 ${count} 筆報名資料嗎？這個動作無法復原。`)) return;
+      await api("clearCampus", { campus:selected });
+      state.regs = state.regs.filter(r => r.campus !== selected);
+      $("paperChecklist").classList.add("hidden");
+      $("paperChecklist").innerHTML = "";
+      save();
+      showAdminMessage(`${campusName} 的報名資料已清空，並同步到 Google 試算表。`);
+    }
+    function selectPrintRows(mode){
+      const selected = $("adminCampus").value || "yp";
+      state.regs.forEach(r => {
+        if (r.campus !== selected) return;
+        if (mode === "unpaidUnprinted") r.printSelected = !r.paid && !r.receiptPrinted;
+        if (mode === "none") r.printSelected = false;
+      });
+      save();
+    }
+
+    function exportRows(){
+      const selected = $("exportCampus").value || "yp";
+      return state.regs.filter(r => r.campus === selected).map((r,i) => ({
+        "系統ID": 139637 + i,
+        "報考考區": "線上",
+        "分校名稱": campus(r.campus).name.replace("分校",""),
+        "分校代碼": campus(r.campus).code,
+        "中文名": r.chineseName,
+        "英文名": r.englishName,
+        "身份證字號": r.nationalId,
+        "西元出生": r.birthDate,
+        "家長(緊急)聯絡人姓名": r.emergencyName,
+        "家長(緊急)聯絡電話": formatPhoneForExcel(r.emergencyPhone),
+        "聯絡電話": formatPhoneForExcel(r.phone),
+        "就讀年級": r.schoolGrade,
+        "報考級別": levelName(r.finalLevelId || r.desiredLevelId),
+        "繳費": r.paid ? "已" : "未",
+        "准考證號": "",
+        "教室編號": ""
+      }));
+    }
+    function copyExcel(){
+      alert("正式佳音格式含身分證、生日與電話，請直接到 Google 試算表的『報名資料』工作表複製或下載，不從公開前台輸出。");
+    }
+
+    function renderParentLevels(){
+      const c = $("parentCampus").value || "yp";
+      $("desiredLevel").innerHTML = `<option value="">請選擇報考級數</option>` + openLevelsFor(c).map(l=>`<option value="${l[0]}">${l[2]} - ${l[4]} - ${l[6]}元</option>`).join("");
+      $("levelTable").innerHTML = table(["級數","檢定項目","對應教材","班級","費用"], openLevelsFor(c).map(l=>`<tr><td>${esc(l[2])}</td><td>${esc(l[3])}</td><td>${esc(l[4])}</td><td>${esc(l[5])}</td><td>${esc(l[6])}元</td></tr>`));
+    }
+
+    function printAdminChecklist(){
+      const selected = $("adminCampus").value || "yp";
+      const rows = state.regs.filter(r => r.campus === selected)
+        .filter(r => r.printSelected)
+        .sort((a,b) => levelSortValue(a.finalLevelId || a.desiredLevelId) - levelSortValue(b.finalLevelId || b.desiredLevelId));
+      const groups = [];
+      rows.forEach(r => {
+        const levelId = r.finalLevelId || r.desiredLevelId;
+        const key = levelId || "none";
+        let group = groups.find(g => g.key === key);
+        if (!group) {
+          group = { key, levelId, rows:[] };
+          groups.push(group);
+        }
+        group.rows.push(r);
+      });
+      const groupSections = groups.map(group => {
+        const title = `${levelClass(group.levelId) || "未設定班級"}　${levelFee(group.levelId) ? levelFee(group.levelId) + "元" : ""}`;
+        const body = group.rows.map((r, groupIndex) => `
+          <tr>
+            <td>${groupIndex + 1}</td>
+            <td>${esc(levelDisplay(group.levelId))}</td>
+            <td>${esc(r.chineseName)}</td>
+            <td>${r.healthCard ? '<span class="paper-check">✓</span>' : '<span class="box"></span>'}</td>
+            <td>${r.headshot ? '<span class="paper-check">✓</span>' : '<span class="box"></span>'}</td>
+            <td>${r.paid ? '<span class="paper-check">✓</span>' : '<span class="box"></span>'}</td>
+          </tr>
+        `).join("");
+        return `
+          <div class="paper-group">
+            <div class="paper-group-title">${esc(title)}</div>
+            <table>
+              <thead><tr><th>序號</th><th>級數</th><th>姓名</th><th>健保卡</th><th>大頭照</th><th>費用</th></tr></thead>
+              <tbody>${body}</tbody>
+            </table>
+          </div>`;
+      }).join("");
+      $("paperChecklist").classList.remove("hidden");
+      $("paperChecklist").innerHTML = `
+        <div class="paper-sheet">
+          <h3>第45屆 JEPT ${esc(campus(selected).name)} 紙本收件表</h3>
+          <div class="meta">檢定日期：${esc(state.settings.examDate)}　報名期間：${esc(state.settings.startDate)} 到 ${esc(state.settings.endDate)}</div>
+          ${rows.length ? `<div class="info">本次產生 ${rows.length} 筆紙本收件表。只列出老師勾選「列印」的學生，並同步目前收件勾選狀態。</div>` : '<div class="info">目前沒有勾選要列印的資料</div>'}
+          ${groupSections}
+          <div class="print-actions"><button type="button" onclick="window.print()">列印這張表</button></div>
+        </div>`;
+      $("paperChecklist").scrollIntoView({ behavior:"smooth", block:"start" });
+    }
+
+    function printReceipts(){
+      const selected = $("adminCampus").value || "yp";
+      const campusRows = state.regs.filter(r => r.campus === selected);
+      let rows = campusRows.filter(r => r.printSelected);
+      if (!rows.length) rows = campusRows.filter(r => !r.paid || !r.receiptPrinted);
+      rows = rows
+        .sort((a,b) => levelSortValue(a.finalLevelId || a.desiredLevelId) - levelSortValue(b.finalLevelId || b.desiredLevelId));
+      if (!rows.length) {
+        showAdminMessage("目前這個分校沒有可產生收執聯的資料。");
+        return;
+      }
+      const receiptPages = rows.map(r => {
+        const levelId = r.finalLevelId || r.desiredLevelId;
+        r.receiptPrinted = true;
+        const slip = type => `
+          <div class="receipt-slip">
+            <div>
+              <h4>第45屆 JEPT 報名費收執聯</h4>
+              <div class="receipt-type">${type}</div>
+              <div class="receipt-row"><b>分校</b><span>${esc(campus(r.campus).name)}</span></div>
+              <div class="receipt-row"><b>姓名</b><span>${esc(r.chineseName)}</span></div>
+              <div class="receipt-row"><b>級數</b><span>${esc(levelDisplay(levelId))}</span></div>
+              <div class="receipt-row"><b>金額</b><span>${levelFee(levelId) ? esc(levelFee(levelId)) + "元" : "未設定"}</span></div>
+              <div class="receipt-row"><b>收費日期</b><span>　　　　年　　　月　　　日</span></div>
+            </div>
+            <div class="receipt-sign"><span>經手人簽章</span><span>備註</span></div>
+          </div>`;
+        return `<div class="receipt-page">${slip("校方留存")} ${slip("家長收執")}</div>`;
+      }).join("");
+      localStorage.setItem(key, JSON.stringify(state));
+      rows.forEach(syncRegistration);
+      $("paperChecklist").classList.remove("hidden");
+      $("paperChecklist").innerHTML = `
+        <div class="paper-sheet">
+          <h3>第45屆 JEPT ${esc(campus(selected).name)} 報名費收執聯</h3>
+          <div class="meta">檢定日期：${esc(state.settings.examDate)}　報名期間：${esc(state.settings.startDate)} 到 ${esc(state.settings.endDate)}</div>
+          <div class="info">本次產生 ${rows.length} 筆收執聯。每位學生一張 B5，上下兩聯。請確認預覽內容後，再按下方「列印收執聯」或鍵盤 Ctrl+P。</div>
+          ${receiptPages}
+          <div class="print-actions"><button type="button" onclick="window.print()">列印收執聯</button></div>
+        </div>`;
+      showAdminMessage(`已產生 ${rows.length} 筆收執聯，預覽已出現在下方。`);
+      $("paperChecklist").scrollIntoView({ behavior:"smooth", block:"start" });
+    }
+
+    function render(){
+      refreshTeacherLock();
+      $("editionNumber").textContent = state.settings.edition || "45";
+      renderHeroTitle();
+      $("heroSubtitle").textContent = state.settings.subtitle;
+      $("examDateText").textContent = state.settings.examDate;
+      $("startDateText").textContent = state.settings.startDate;
+      $("endDateText").textContent = state.settings.endDate;
+      $("setEdition").value = state.settings.edition || "45";
+      $("setTitle").value = state.settings.title;
+      $("setSubtitle").value = state.settings.subtitle;
+      $("setExam").value = state.settings.examDate;
+      $("setStart").value = state.settings.startDate;
+      $("setEnd").value = state.settings.endDate;
+      $("setNotice").value = state.settings.notice;
+      $("setPrivacy").value = state.settings.privacy;
+
+      const selectedParent = $("parentCampus").value || state.lastGuardian?.campus || "yp";
+      $("parentCampus").innerHTML = campusOptions(selectedParent);
+      $("lookupCampus").innerHTML = campusOptions($("lookupCampus").value || "yp");
+      $("levelCampus").innerHTML = campusOptions($("levelCampus").value || "yp");
+      $("adminCampus").innerHTML = campusOptions($("adminCampus").value || "yp");
+      $("exportCampus").innerHTML = campusOptions($("exportCampus").value || "yp");
+      renderParentLevels();
+
+      const lc = $("levelCampus").value || "yp";
+      $("levelEditTable").innerHTML = table(["開放","級數","檢定項目","教材","班級","費用",""], levelsFor(lc).map(l => `
+        <tr>
+          <td><input type="checkbox" ${l[7] ? "checked" : ""} onchange="updateLevel('${l[0]}',7,this)"></td>
+          <td><input value="${esc(l[2])}" onchange="updateLevel('${l[0]}',2,this.value)"></td>
+          <td><input value="${esc(l[3])}" onchange="updateLevel('${l[0]}',3,this.value)"></td>
+          <td><input value="${esc(l[4])}" onchange="updateLevel('${l[0]}',4,this.value)"></td>
+          <td><input value="${esc(l[5])}" onchange="updateLevel('${l[0]}',5,this.value)"></td>
+          <td><input type="number" value="${esc(l[6])}" onchange="updateLevel('${l[0]}',6,this.value)"></td>
+          <td><button class="danger" onclick="state.levels=state.levels.filter(x=>x[0] !== '${l[0]}'); save()">刪除</button></td>
+        </tr>`));
+
+      const ac = $("adminCampus").value || "yp";
+      const adminRows = state.regs.filter(r => r.campus === ac)
+        .sort((a,b) => levelSortValue(a.finalLevelId || a.desiredLevelId) - levelSortValue(b.finalLevelId || b.desiredLevelId));
+      let currentLevelGroup = "";
+      let groupRowNumber = 1;
+      const adminBodyRows = adminRows.flatMap(r => {
+        const i = state.regs.indexOf(r);
+        const selectedLevelId = r.finalLevelId || r.desiredLevelId;
+        const levelOptions = levelsFor(r.campus).map(l => `<option value="${l[0]}" ${selectedLevelId===l[0]?"selected":""}>${l[2]} ${l[4]}</option>`).join("");
+        const groupRow = selectedLevelId !== currentLevelGroup
+          ? `<tr class="group-row"><td colspan="10">${esc(levelDisplay(selectedLevelId))}　${esc(levelClass(selectedLevelId))}　${levelFee(selectedLevelId) ? esc(levelFee(selectedLevelId)) + "元" : ""}</td></tr>`
+          : "";
+        if (selectedLevelId !== currentLevelGroup) groupRowNumber = 1;
+        currentLevelGroup = selectedLevelId;
+        return [groupRow, `<tr>
+          <td><input type="checkbox" ${r.printSelected ? "checked" : ""} onchange="updateReg(${i},'printSelected',this.checked)"></td>
+          <td>${groupRowNumber++}</td>
+          <td><select onchange="updateReg(${i},'finalLevelId',this.value)">${levelOptions}</select></td>
+          <td>${esc(r.chineseName)}</td>
+          <td><input type="checkbox" ${r.healthCard ? "checked" : ""} onchange="updateReg(${i},'healthCard',this.checked)"></td>
+          <td><input type="checkbox" ${r.headshot ? "checked" : ""} onchange="updateReg(${i},'headshot',this.checked)"></td>
+          <td><input type="checkbox" ${r.paid ? "checked" : ""} onchange="updateReg(${i},'paid',this)"></td>
+          <td>${r.receiptPrinted ? "已產生" : "未印"}</td>
+          <td>${esc(r.status)}</td>
+          <td><button class="danger" type="button" onclick="deleteRegistration(${i})">刪除</button></td>
+        </tr>`].filter(Boolean);
+      });
+      $("adminTable").innerHTML = table(["列印","編號","級數","姓名","健保卡","大頭照","費用","收執聯","狀態",""], adminBodyRows);
+
+      const exportRowsHtml = exportRows().map(r => `<tr>${Object.values(r).map(v => `<td>${esc(v)}</td>`).join("")}</tr>`);
+      $("exportTable").innerHTML = table(Object.keys(exportRows()[0] || {"目前沒有資料":""}), exportRowsHtml.length ? exportRowsHtml : ['<tr><td>目前沒有資料</td></tr>']);
+    }
+
+    loadOnlineData().catch(() => render());
   </script>
 </body>
 </html>

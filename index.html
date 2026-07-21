@@ -368,9 +368,14 @@
       });
     }
     async function postApi(action, payload = {}){
-      const body = new FormData();
-      body.append("payload", JSON.stringify({ ...payload, action }));
-      await fetch(API_ENDPOINT, { method:"POST", mode:"no-cors", body });
+      const body = new URLSearchParams();
+      body.set("payload", JSON.stringify({ ...payload, action }));
+      await fetch(API_ENDPOINT, {
+        method:"POST",
+        mode:"no-cors",
+        headers:{ "Content-Type":"application/x-www-form-urlencoded;charset=UTF-8" },
+        body:body.toString()
+      });
       return { ok:true };
     }
     function sleep(ms){ return new Promise(resolve => setTimeout(resolve, ms)); }
@@ -399,14 +404,14 @@
         image.onerror = () => reject(new Error(`${label}無法讀取，請重新選擇照片。`));
         image.src = dataUrl;
       });
-      const maxSide = 1400;
+      const maxSide = 1000;
       const scale = Math.min(1, maxSide / Math.max(img.width, img.height));
       const canvas = document.createElement("canvas");
       canvas.width = Math.max(1, Math.round(img.width * scale));
       canvas.height = Math.max(1, Math.round(img.height * scale));
       const ctx = canvas.getContext("2d");
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-      const compressed = canvas.toDataURL("image/jpeg", 0.82);
+      const compressed = canvas.toDataURL("image/jpeg", 0.72);
       return {
         name: file.name || `${label}.jpg`,
         mimeType: "image/jpeg",

@@ -142,31 +142,7 @@
       $("#levelTable").innerHTML = `<thead><tr><th>級數</th><th>檢定項目</th><th>教材</th><th>班級</th><th>費用</th></tr></thead><tbody>${levels[campus].map(l => `<tr><td>${l[1]}</td><td>${l[2]}</td><td>${l[3]}</td><td>${l[4]}</td><td>${l[5]}元</td></tr>`).join("")}</tbody>`;
     }
     async function submitRegistration(url, payload){
-      return new Promise(resolve => {
-        const frameName = "jeptSubmitFrame" + Date.now();
-        const frame = document.createElement("iframe");
-        frame.name = frameName;
-        frame.className = "hidden";
-        const form = document.createElement("form");
-        form.method = "POST";
-        form.action = url;
-        form.target = frameName;
-        form.className = "hidden";
-        const input = document.createElement("input");
-        input.name = "payload";
-        input.value = JSON.stringify({ ...payload, action:"submit" });
-        form.appendChild(input);
-        document.body.appendChild(frame);
-        document.body.appendChild(form);
-        const cleanup = () => {
-          form.remove();
-          setTimeout(() => frame.remove(), 1000);
-          resolve({ ok:true });
-        };
-        frame.addEventListener("load", cleanup, { once:true });
-        form.submit();
-        setTimeout(cleanup, 2500);
-      });
+      return getJsonp(url, { action:"submit", payload:JSON.stringify(payload) });
     }
     function getJsonp(url, payload){
       return new Promise((resolve, reject) => {

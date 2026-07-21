@@ -96,7 +96,7 @@
   <script>
     // 每一屆要修改的資料集中放這裡。
     // 之後只要改這幾行，再重新上傳 index.html 到 GitHub，就能更新前台。
-    const siteSettings = {
+    let siteSettings = {
       edition: "46th",
       pageTitle: "佳音體系代報名管理",
       heroTitle: "佳音體系代報名管理",
@@ -169,6 +169,16 @@
         document.body.appendChild(script);
       });
     }
+    async function loadSiteSettings(){
+      if (!LOOKUP_ENDPOINT) return;
+      try {
+        const config = await getJsonp(LOOKUP_ENDPOINT, { action:"config" });
+        siteSettings = { ...siteSettings, ...config };
+        renderSiteSettings();
+      } catch {
+        renderSiteSettings();
+      }
+    }
     $("#applyForm").addEventListener("submit", async e => {
       e.preventDefault();
       const fd = new FormData(e.currentTarget);
@@ -233,6 +243,7 @@
       input.addEventListener("input", () => { if (input.value.length >= input.maxLength) $(`input[name=${b}]`).focus(); });
     });
     renderSiteSettings();
+    loadSiteSettings();
     fillSelects();
   </script>
 </body>

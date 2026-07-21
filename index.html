@@ -129,7 +129,7 @@
         </div>
         <h1 id="heroTitle" class="hero-main-title">佳音體系代報名管理</h1>
         <div class="hero-en">JOY ENGLISH PROFICIENCY TEST ONLINE</div>
-        <p class="hero-tagline" id="heroSubtitle">提供家長報名、老師收件確認、級數維護與佳音格式匯出。</p>
+        <p class="hero-tagline" id="heroSubtitle">提供家長報名、老師收件確認與級數維護。</p>
         <div class="skill-strip">
           <span><b>LISTENING</b>｜聽力</span>
           <span><b>READING</b>｜閱讀</span>
@@ -151,7 +151,6 @@
     <button class="tab teacher-only locked" data-tab="settings">後台設定</button>
     <button class="tab teacher-only locked" data-tab="levels">級數與費用</button>
     <button class="tab teacher-only locked" data-tab="admin">老師/行政收件管理</button>
-    <button class="tab teacher-only locked" data-tab="export">佳音格式</button>
     <button id="teacherToggle" class="teacher-toggle" type="button" title="老師設定" onclick="toggleTeacherMode()" aria-label="老師設定">
       <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
         <path d="M12 15.5A3.5 3.5 0 1 0 12 8a3.5 3.5 0 0 0 0 7.5Z"></path>
@@ -199,6 +198,8 @@
           <label>聯絡電話<input id="phone" name="phone" inputmode="tel" required></label>
           <label>家長緊急聯絡人姓名<input name="emergencyName" required></label>
           <label>家長緊急聯絡人手機<input id="emergencyPhone" name="emergencyPhone" inputmode="tel" required></label>
+          <label class="wide">健保卡正面照片<input name="healthCardPhoto" type="file" accept="image/*" required><span class="hint">請拍健保卡正面，文字清楚可辨識。</span></label>
+          <label class="wide">學生臉部正面照<input name="headshotPhoto" type="file" accept="image/*" required><span class="hint">請在白色背景前拍攝，臉部清楚、光線充足。</span></label>
         </div>
         <div class="actions" style="margin-top:16px">
           <button type="submit">送出報名</button>
@@ -267,16 +268,6 @@
       <div id="paperChecklist" class="hidden" style="margin-top:18px"></div>
     </section>
 
-    <section id="export" class="tab-page panel hidden">
-      <div class="head">
-        <div>
-          <h2>佳音格式</h2>
-          <p class="sub">正式佳音格式含身分證、生日與電話，請直接到 Google 試算表的「報名資料」工作表複製或下載。這裡不從公開前台輸出完整個資。</p>
-        </div>
-        <div class="actions"><button class="secondary" onclick="copyExcel()">查看匯出提醒</button></div>
-      </div>
-      <div class="info">為避免家長個資出現在前台畫面，這一頁不顯示報名清冊。老師需要正式佳音格式時，請用 Google 帳號開啟試算表處理。</div>
-    </section>
   </main>
 
   <script>
@@ -284,20 +275,20 @@
     const API_ENDPOINT = "https://script.google.com/macros/s/AKfycbwv00_1dh0vd47VgyQMGPzxk13Wr0M62T8Phz5k1gFzarWF0OEfYJwwmDWYVF8rrFsA/exec";
     const campuses = [
       { id:"yp", name:"永平分校", code:"BB010" },
-      { id:"yh", name:"永和分校", code:"BB011" },
-      { id:"qs", name:"清水分校", code:"BB012" },
-      { id:"jc", name:"江翠分校", code:"BB013" }
+      { id:"yh", name:"永和分校", code:"" },
+      { id:"qs", name:"清水分校", code:"" },
+      { id:"jc", name:"江翠分校", code:"" }
     ];
     const defaults = {
       settings:{
         edition:"46",
         title:"佳音體系代報名管理",
-        subtitle:"提供家長報名、老師收件確認、級數維護與佳音格式匯出。",
+        subtitle:"提供家長報名、老師收件確認與級數維護。",
         examDate:"2026-11-22",
         startDate:"2026-08-10",
         endDate:"2026-08-28",
-        notice:"報名資料送出後，請等待老師確認級數與收件狀態。",
-        privacy:"正式上線時，完整身分證、生日與電話只會送到安全後台，不會放在前台程式碼、網址或公開頁面。"
+        notice:"請依孩子資料填寫。送出後請至佳音櫃檯繳交對應報名級數的金額。",
+        privacy:"完整身分證、生日、電話與照片只會送到 Google 試算表與 Google Drive，不會放在前台程式碼、網址或公開頁面。"
       },
       lastGuardian:null,
       levels:[
@@ -376,6 +367,52 @@
         document.body.appendChild(script);
       });
     }
+    async function postApi(action, payload = {}){
+      const body = new FormData();
+      body.append("payload", JSON.stringify({ ...payload, action }));
+      await fetch(API_ENDPOINT, { method:"POST", mode:"no-cors", body });
+      return { ok:true };
+    }
+    function sleep(ms){ return new Promise(resolve => setTimeout(resolve, ms)); }
+    async function waitForSubmittedRegistration(clientSubmitId){
+      for (let attempt = 0; attempt < 8; attempt++) {
+        await sleep(900);
+        const result = await api("findSubmit", { clientSubmitId });
+        if (result && result.ok) return result;
+      }
+      return { ok:false, message:"尚未確認後端收件" };
+    }
+    function readAsDataUrl(file){
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+    async function imageFilePayload(file, label){
+      if (!file) return null;
+      const dataUrl = await readAsDataUrl(file);
+      const img = await new Promise((resolve, reject) => {
+        const image = new Image();
+        image.onload = () => resolve(image);
+        image.onerror = () => reject(new Error(`${label}無法讀取，請重新選擇照片。`));
+        image.src = dataUrl;
+      });
+      const maxSide = 1400;
+      const scale = Math.min(1, maxSide / Math.max(img.width, img.height));
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.max(1, Math.round(img.width * scale));
+      canvas.height = Math.max(1, Math.round(img.height * scale));
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      const compressed = canvas.toDataURL("image/jpeg", 0.82);
+      return {
+        name: file.name || `${label}.jpg`,
+        mimeType: "image/jpeg",
+        data: compressed.split(",")[1]
+      };
+    }
     function statusText(field, value){
       if (field === "healthCard") return value ? "已確認" : "未確認";
       if (field === "headshot") return value ? "已收" : "未收";
@@ -416,7 +453,9 @@
       const active = final || desired;
       return {
         id: reg.id,
+        clientSubmitId: reg.clientSubmitId,
         campus: reg.campus,
+        campusCode: campus(reg.campus).code,
         campusName: campus(reg.campus).name,
         chineseName: reg.chineseName,
         englishName: reg.englishName,
@@ -446,14 +485,27 @@
       if (configResult && configResult.ok && configResult.config) {
         const config = { ...configResult.config };
         if (config.levelsJson) {
-          try { state.levels = JSON.parse(config.levelsJson); } catch (error) {}
+          try {
+            const parsedLevels = JSON.parse(config.levelsJson);
+            if (Array.isArray(parsedLevels) && parsedLevels.length) state.levels = parsedLevels;
+          } catch (error) {}
           delete config.levelsJson;
+        }
+        if (config.notice === "報名資料送出後，請等待老師確認級數與收件狀態。") {
+          config.notice = "請依孩子資料填寫。送出後請至佳音櫃檯繳交對應報名級數的金額。";
+        }
+        if (String(config.subtitle || "").includes("格式匯出")) {
+          config.subtitle = "提供家長報名、老師收件確認與級數維護。";
+        }
+        if (!String(config.privacy || "").includes("照片")) {
+          config.privacy = defaults.settings.privacy;
         }
         state.settings = { ...state.settings, ...config };
       }
       if (listResult && listResult.ok && Array.isArray(listResult.registrations)) {
         state.regs = listResult.registrations.map(backendToReg);
       }
+      ensureDefaultLevels();
       save();
     }
     async function syncRegistration(reg){
@@ -468,6 +520,14 @@
     function campus(id){ return campuses.find(c => c.id === id) || campuses[0]; }
     function campusOptions(selected){ return campuses.map(c => `<option value="${c.id}" ${selected===c.id?"selected":""}>${c.name}</option>`).join(""); }
     function levelsFor(campusId){ return state.levels.filter(l => l[1] === campusId); }
+    function ensureDefaultLevels(){
+      if (!Array.isArray(state.levels)) state.levels = [];
+      campuses.forEach(c => {
+        if (!levelsFor(c.id).length) {
+          state.levels.push(...structuredClone(defaults.levels.filter(l => l[1] === c.id)));
+        }
+      });
+    }
     function openLevelsFor(campusId){ return levelsFor(campusId).filter(l => l[7]); }
     function levelInfo(id){ return state.levels.find(x => x[0] === id); }
     function levelName(id){ const l = state.levels.find(x => x[0] === id); return l ? l[2] : "尚未確認"; }
@@ -568,8 +628,23 @@
       const birthDate = y && m && d ? `${y.padStart(4,"0")}-${m.padStart(2,"0")}-${d.padStart(2,"0")}` : "";
       const selectedLevelId = data.get("desiredLevelId");
       const selectedLevel = levelInfo(selectedLevelId);
+      const healthCardPhoto = data.get("healthCardPhoto");
+      const headshotPhoto = data.get("headshotPhoto");
+      if (!selectedLevel) {
+        $("successBox").textContent = "請先選擇報考級數。";
+        $("successBox").className = "danger-box";
+        $("successBox").classList.remove("hidden");
+        return;
+      }
+      if (!healthCardPhoto?.size || !headshotPhoto?.size) {
+        $("successBox").textContent = "請上傳健保卡正面照片與學生臉部正面照。";
+        $("successBox").className = "danger-box";
+        $("successBox").classList.remove("hidden");
+        return;
+      }
       const pendingReg = {
         id:"",
+        clientSubmitId:"JEPT-" + Date.now() + "-" + Math.random().toString(16).slice(2),
         campus:data.get("campus"),
         chineseName:data.get("chineseName"),
         englishName:data.get("englishName"),
@@ -592,11 +667,18 @@
       };
       const submitButton = e.target.querySelector('button[type="submit"]');
       submitButton.disabled = true;
-      submitButton.textContent = "送出中...";
+      submitButton.textContent = "照片處理中...";
       try {
-        const result = await api("submit", regPayload(pendingReg));
+        const payload = regPayload(pendingReg);
+        payload.healthCardPhoto = await imageFilePayload(healthCardPhoto, "健保卡照片");
+        payload.headshotPhoto = await imageFilePayload(headshotPhoto, "學生照片");
+        submitButton.textContent = "送出中...";
+        await postApi("submit", payload);
+        const result = await waitForSubmittedRegistration(pendingReg.clientSubmitId);
         if (!result || !result.ok) throw new Error(result?.message || "送出失敗");
         pendingReg.id = result.id;
+        pendingReg.healthCard = true;
+        pendingReg.headshot = true;
         scrubLocalRegistration(pendingReg);
         state.regs.push(pendingReg);
         state.lastGuardian = {
@@ -612,12 +694,12 @@
         e.target.emergencyPhone.value = state.lastGuardian.emergencyPhone;
         emergencyPhoneChanged = false;
         const amount = levelFee(selectedLevelId);
-        $("successBox").textContent = `報名已送出，報名編號：${pendingReg.id}。請至佳音櫃檯繳交${amount ? amount + "元" : "對應級數金額"}，老師確認後可用姓名與電話後三碼查詢狀態。`;
+        $("successBox").textContent = `報名資料已送出，請至佳音櫃檯繳交${amount ? amount + "元" : "對應報名級數的金額"}。`;
         $("successBox").className = "info";
         $("successBox").classList.remove("hidden");
         save();
       } catch (error) {
-        $("successBox").textContent = "送出失敗，請稍後再試或洽佳音櫃檯。";
+        $("successBox").textContent = `送出失敗，請稍後再試或洽佳音櫃檯。${error?.message ? "原因：" + error.message : ""}`;
         $("successBox").className = "danger-box";
         $("successBox").classList.remove("hidden");
       } finally {
@@ -659,7 +741,7 @@
       };
       save();
       await syncConfigAndLevels();
-      showAdminMessage("後台設定已同步到 Google 設定表。");
+      showAdminMessage("後台設定已儲存並同步到後端。");
     }
 
     async function addLevel(){
@@ -682,7 +764,7 @@
     }
     async function updateReg(i,field,v){
       const isCheckbox = ["healthCard","headshot","paid","receiptPrinted","printSelected"].includes(field);
-      state.regs[i][field] = isCheckbox ? v.checked : v;
+      state.regs[i][field] = isCheckbox ? (typeof v === "boolean" ? v : v.checked) : v;
       const item = state.regs[i];
       const selectedLevel = levelInfo(item.finalLevelId || item.desiredLevelId);
       if (field === "finalLevelId" && selectedLevel) {
@@ -729,10 +811,7 @@
         if (mode === "none") r.printSelected = false;
       });
       save();
-    }
-
-    function copyExcel(){
-      alert("正式佳音格式含身分證、生日與電話，請直接到 Google 試算表的『報名資料』工作表複製或下載，不從公開前台輸出。");
+      showAdminMessage(mode === "none" ? "已清除列印勾選。" : "已選取未繳費且未列印收執聯的資料。");
     }
 
     function renderParentLevels(){
@@ -856,7 +935,6 @@
       $("lookupCampus").innerHTML = campusOptions($("lookupCampus").value || "yp");
       $("levelCampus").innerHTML = campusOptions($("levelCampus").value || "yp");
       $("adminCampus").innerHTML = campusOptions($("adminCampus").value || "yp");
-      $("exportCampus").innerHTML = campusOptions($("exportCampus").value || "yp");
       renderParentLevels();
 
       const lc = $("levelCampus").value || "yp";
@@ -868,7 +946,7 @@
           <td><input value="${esc(l[4])}" onchange="updateLevel('${l[0]}',4,this.value)"></td>
           <td><input value="${esc(l[5])}" onchange="updateLevel('${l[0]}',5,this.value)"></td>
           <td><input type="number" value="${esc(l[6])}" onchange="updateLevel('${l[0]}',6,this.value)"></td>
-          <td><button class="danger" onclick="state.levels=state.levels.filter(x=>x[0] !== '${l[0]}'); save()">刪除</button></td>
+          <td><button class="danger" type="button" onclick="deleteLevel('${l[0]}')">刪除</button></td>
         </tr>`));
 
       const ac = $("adminCampus").value || "yp";

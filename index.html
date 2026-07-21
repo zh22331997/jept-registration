@@ -368,20 +368,40 @@
       });
     }
     async function postApi(action, payload = {}){
-      const body = new URLSearchParams();
-      body.set("payload", JSON.stringify({ ...payload, action }));
-      await fetch(API_ENDPOINT, {
-        method:"POST",
-        mode:"no-cors",
-        headers:{ "Content-Type":"application/x-www-form-urlencoded;charset=UTF-8" },
-        body:body.toString()
+      return new Promise(resolve => {
+        const frameName = "jeptSubmitFrame" + Date.now();
+        const iframe = document.createElement("iframe");
+        iframe.name = frameName;
+        iframe.style.display = "none";
+        const form = document.createElement("form");
+        form.method = "POST";
+        form.action = API_ENDPOINT;
+        form.target = frameName;
+        form.style.display = "none";
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = "payload";
+        input.value = JSON.stringify({ ...payload, action });
+        form.appendChild(input);
+        document.body.appendChild(iframe);
+        document.body.appendChild(form);
+        let settled = false;
+        const cleanup = () => {
+          if (settled) return;
+          settled = true;
+          form.remove();
+          iframe.remove();
+          resolve({ ok:true });
+        };
+        iframe.addEventListener("load", () => setTimeout(cleanup, 200));
+        form.submit();
+        setTimeout(cleanup, 3000);
       });
-      return { ok:true };
     }
     function sleep(ms){ return new Promise(resolve => setTimeout(resolve, ms)); }
     async function waitForSubmittedRegistration(clientSubmitId){
-      for (let attempt = 0; attempt < 8; attempt++) {
-        await sleep(900);
+      for (let attempt = 0; attempt < 14; attempt++) {
+        await sleep(1200);
         const result = await api("findSubmit", { clientSubmitId });
         if (result && result.ok) return result;
       }
@@ -404,14 +424,14 @@
         image.onerror = () => reject(new Error(`${label}無法讀取，請重新選擇照片。`));
         image.src = dataUrl;
       });
-      const maxSide = 1000;
+      const maxSide = 760;
       const scale = Math.min(1, maxSide / Math.max(img.width, img.height));
       const canvas = document.createElement("canvas");
       canvas.width = Math.max(1, Math.round(img.width * scale));
       canvas.height = Math.max(1, Math.round(img.height * scale));
       const ctx = canvas.getContext("2d");
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-      const compressed = canvas.toDataURL("image/jpeg", 0.72);
+      const compressed = canvas.toDataURL("image/jpeg", 0.62);
       return {
         name: file.name || `${label}.jpg`,
         mimeType: "image/jpeg",

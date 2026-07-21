@@ -142,7 +142,26 @@
       $("#levelTable").innerHTML = `<thead><tr><th>級數</th><th>檢定項目</th><th>教材</th><th>班級</th><th>費用</th></tr></thead><tbody>${levels[campus].map(l => `<tr><td>${l[1]}</td><td>${l[2]}</td><td>${l[3]}</td><td>${l[4]}</td><td>${l[5]}元</td></tr>`).join("")}</tbody>`;
     }
     async function submitRegistration(url, payload){
-      return getJsonp(url, { action:"submit", payload:JSON.stringify(payload) });
+      return new Promise(resolve => {
+        const callback = "jeptSubmitCallback" + Date.now() + Math.random().toString(16).slice(2);
+        const script = document.createElement("script");
+        const done = () => {
+          delete window[callback];
+          script.remove();
+          resolve({ ok:true });
+        };
+        window[callback] = done;
+        const params = new URLSearchParams({
+          action:"submit",
+          callback,
+          payload:JSON.stringify(payload)
+        });
+        script.onload = done;
+        script.onerror = done;
+        script.src = `${url}?${params.toString()}`;
+        document.body.appendChild(script);
+        setTimeout(done, 3500);
+      });
     }
     function getJsonp(url, payload){
       return new Promise((resolve, reject) => {

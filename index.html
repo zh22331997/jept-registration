@@ -1,275 +1,1242 @@
-<!doctype html>
-<html lang="zh-Hant">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>佳音JEPT報名系統</title>
-  <style>
-    *{box-sizing:border-box}body{margin:0;font-family:"Microsoft JhengHei","Noto Sans TC",Arial,sans-serif;background:#eef4fb;color:#082b52}button,input,select,textarea{font:inherit}.hero{background:#1f5ca3;color:#fff;border-bottom:5px solid #e21b2d;padding:22px 18px 28px}.hero-inner{max-width:1180px;margin:auto;display:grid;grid-template-columns:1fr minmax(260px,360px);gap:24px;align-items:center}.brand{display:flex;gap:22px;align-items:flex-start}.logo{font-size:76px;font-weight:900;letter-spacing:0}.edition{position:relative;width:112px;height:112px;border:2px solid #fff;border-radius:50%;display:flex;align-items:center;justify-content:center;line-height:1}.edition:after{content:"";position:absolute;right:16px;bottom:22px;width:24px;height:20px;background:#1f5ca3}.edition-number{font-size:48px;font-weight:400}.edition-suffix{position:relative;z-index:1;align-self:center;margin-left:2px;margin-top:28px;font-size:18px}.hero h1{font-size:42px;margin:18px 0 6px}.en{font-size:28px;font-weight:900}.tag{color:#ffe900;font-size:22px;font-weight:900;text-align:center;margin:18px 0 12px}.skills{border-top:3px solid #e21b2d;padding-top:12px;font-size:22px;font-weight:900}.dates{border:1px solid rgba(255,255,255,.35);border-radius:8px;background:rgba(255,255,255,.12);padding:18px;line-height:1.8;font-weight:800}.nav{max-width:1180px;margin:0 auto;padding:16px 18px;display:flex;gap:10px}.tab{border:0;border-radius:7px;background:#dfeaf7;color:#082b52;padding:12px 18px;font-weight:800;cursor:pointer}.tab.active{background:#1f5ca3;color:#fff}.wrap{max-width:1180px;margin:0 auto 40px;padding:0 18px}.panel{background:#fff;border:1px solid #c3d4e7;border-radius:8px;padding:22px;margin-bottom:18px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 18px}.wide{grid-column:1/-1}label{font-weight:800}input,select,textarea{width:100%;margin-top:7px;border:1px solid #b9cbe0;border-radius:7px;padding:11px;color:#082b52;background:#fff}textarea{min-height:80px}.actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.primary,.secondary{border:0;border-radius:7px;padding:12px 18px;font-weight:900;cursor:pointer}.primary{background:#1f5ca3;color:#fff}.secondary{background:#dfeaf7;color:#082b52}.info,.success,.warn{border-radius:8px;padding:14px;margin-top:14px;line-height:1.8}.info{background:#edf6ff;border:1px solid #b8d7f5}.success{background:#eefaf2;border:1px solid #a9dfbb}.warn{background:#fff0f0;border:1px solid #ffb7b7;color:#b01818}.hidden{display:none}.level-help{border:1px solid #cbd9ea;border-radius:7px;background:#f8fbff;padding:12px}.level-help summary{cursor:pointer;font-weight:900;color:#082b52}.level-reference{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px;margin-top:12px}.level-ref-card{border:1px solid #cbd9ea;border-radius:7px;background:#fff;padding:12px;line-height:1.65;overflow-wrap:anywhere}.level-ref-class{display:inline-block;background:#edf6ff;border:1px solid #b8d7f5;border-radius:6px;padding:4px 8px;font-size:17px;font-weight:900;margin-bottom:8px}.level-ref-card strong{font-size:17px}.lookup-result{display:grid;gap:8px}.notice{background:#f4f8ff;border-left:4px solid #1f5ca3;padding:14px;line-height:1.8;margin-top:14px}@media(max-width:760px){.hero-inner,.grid{grid-template-columns:1fr}.brand{display:block}.logo{font-size:56px}.edition{width:86px;height:86px;margin-top:8px}.edition:after{right:11px;bottom:17px;width:20px;height:16px}.edition-number{font-size:36px}.edition-suffix{font-size:14px;margin-top:22px}.hero h1{font-size:32px}.en,.skills{font-size:18px}.tag{text-align:left;font-size:18px}.nav{overflow:auto}.tab{white-space:nowrap}.panel{padding:16px}.level-reference{grid-template-columns:1fr}.level-ref-card{overflow-wrap:break-word}}
-  </style>
-</head>
-<body>
-  <header class="hero">
-    <div class="hero-inner">
-      <div>
-        <div class="brand"><div class="logo">JEPT</div><div id="editionText" class="edition"><span class="edition-number">45</span><span class="edition-suffix">th</span></div></div>
-        <h1 id="mainTitle">佳音體系代報名管理</h1>
-        <div class="en">JOY ENGLISH PROFICIENCY TEST ONLINE</div>
-        <div id="heroTagline" class="tag">提供家長報名、老師收件確認與級數維護。</div>
-        <div class="skills">LISTENING｜聽力　READING｜閱讀　WRITING｜寫作　SPEAKING｜口說</div>
-      </div>
-      <aside class="dates">
-        <div>練習模擬考 <span id="practiceMockText">待公告</span></div>
-        <div>仿真模擬考 <span id="realisticMockText">待公告</span></div>
-        <div>正式考試 <span id="examDateText"></span></div>
-        <div>報名期間 <span id="signupDateText"></span></div>
-        <div>官方網站 <a href="https://jept.joy.com.tw/" target="_blank" rel="noopener" style="color:#fff">jept.joy.com.tw</a></div>
-      </aside>
-    </div>
-  </header>
+const SHEET_NAMES = {
+  config: "公開設定",
+  levels: "級數設定",
+  registrations: "報名資料",
+  receipts: "收件狀態",
+  management: "收件管理"
+};
 
-  <nav class="nav">
-    <button class="tab active" data-page="apply">家長報名</button>
-    <button class="tab" data-page="lookup">報名查詢</button>
-  </nav>
+const SPREADSHEET_ID_PROPERTY = "SPREADSHEET_ID";
+const PRINT_FOLDER_ID_PROPERTY = "PRINT_FOLDER_ID";
+const ADMIN_EMAIL_PROPERTY = "ADMIN_EMAILS";
 
-  <main class="wrap">
-    <section id="apply" class="panel">
-      <h2>家長報名表</h2>
-      <p id="applyIntro" class="sub"></p>
-      <form id="applyForm" class="grid" autocomplete="off">
-        <label class="wide">報名分校<select name="campus" required></select></label>
-        <label>中文姓名<input name="chineseName" required maxlength="10"></label>
-        <label>英文姓名<input name="englishName" required maxlength="30"></label>
-        <label>性別<select name="gender" required><option value="">請選擇</option><option>男</option><option>女</option></select></label>
-        <label>身分證字號<input name="nationalId" required maxlength="10" autocomplete="off"></label>
-        <label class="wide">西元出生日期
-          <div class="grid">
-            <input name="birthYear" placeholder="西元年" inputmode="numeric" maxlength="4" required>
-            <input name="birthMonth" placeholder="月" inputmode="numeric" maxlength="2" required>
-            <input name="birthDay" placeholder="日" inputmode="numeric" maxlength="2" required>
-          </div>
-        </label>
-        <label>就讀年級<select name="schoolGrade" required><option value="">請選擇</option><option>國小一年級</option><option>國小二年級</option><option>國小三年級</option><option>國小四年級</option><option>國小五年級</option><option>國小六年級</option></select></label>
-        <label>報考級數<select name="desiredLevelId" required></select></label>
-        <details id="levelHelp" class="wide level-help">
-          <summary>不知道怎麼選？可依孩子目前班級查看建議級數</summary>
-          <div id="applyLevelReference"></div>
-        </details>
-        <label>聯絡電話<input name="phone" required inputmode="numeric" maxlength="12"></label>
-        <label>家長緊急聯絡人姓名<input name="emergencyName" required maxlength="30"></label>
-        <label>家長緊急聯絡人手機<input name="emergencyPhone" required inputmode="numeric" maxlength="12"></label>
-        <div class="wide actions"><button class="primary" type="submit">送出報名</button><button class="secondary" type="reset">清空資料</button></div>
-      </form>
-      <div id="applyMsg" class="hidden"></div>
-      <div id="successBox" class="success hidden"></div>
-    </section>
+const CAMPUSES = [
+  { id: "yp", name: "永平分校", code: "BB010" },
+  { id: "yh", name: "永和分校", code: "" },
+  { id: "qs", name: "清水分校", code: "" },
+  { id: "jc", name: "江翠分校", code: "" }
+];
 
-    <section id="lookup" class="panel hidden">
-      <h2>家長報名查詢</h2>
-      <p>請用孩子中文姓名與聯絡電話後三碼查詢。</p>
-      <form id="lookupForm" class="grid" autocomplete="off">
-        <label>分校<select name="campus" required></select></label>
-        <label>孩子中文姓名<input name="chineseName" required maxlength="10"></label>
-        <label>聯絡電話後三碼<input name="phoneLast3" required inputmode="numeric" maxlength="3"></label>
-        <div class="wide actions"><button class="primary" type="submit">查詢</button></div>
-      </form>
-      <div id="lookupMsg" class="hidden"></div>
-      <div id="lookupResult" class="lookup-result info hidden"></div>
-    </section>
+const CONFIG_DEFAULTS = {
+  edition: "45",
+  pageTitle: "佳音JEPT報名系統",
+  mainTitle: "佳音體系代報名管理",
+  heroTagline: "提供家長報名、老師收件確認與級數維護。",
+  practiceMockDate: "待公告",
+  realisticMockDate: "待公告",
+  examDate: "2026/11/22(日)",
+  signupDate: "2026/08/10(一) 到 2026/08/28(五)",
+  applyIntro: "請依孩子資料填寫。送出後請至佳音櫃台繳交對應報名級數的金額。"
+};
 
-  </main>
+const REGISTRATION_HEADERS = [
+  "報名時間",
+  "報名編號",
+  "分校ID",
+  "分校代碼",
+  "分校名稱",
+  "中文姓名",
+  "英文姓名",
+  "性別",
+  "身分證字號",
+  "西元出生日期",
+  "就讀年級",
+  "聯絡電話",
+  "緊急連絡人手機",
+  "家長緊急聯絡人姓名",
+  "報名級數ID",
+  "報名級數",
+  "教材",
+  "班級",
+  "費用",
+  "狀態",
+  "屆數"
+];
 
-  <script>
-    const API_ENDPOINT = "https://script.google.com/macros/s/AKfycbwv00_1dh0vd47VgyQMGPzxk13Wr0M62T8Phz5k1gFzarWF0OEfYJwwmDWYVF8rrFsA/exec";
-    const state = {config:{},campuses:[],levels:[]};
-    const $ = sel => document.querySelector(sel);
-    const $$ = sel => [...document.querySelectorAll(sel)];
-    const esc = v => String(v ?? "").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
-    const digits = v => String(v || "").replace(/\D/g, "");
+const RECEIPT_HEADERS = [
+  "報名編號",
+  "健保卡資料",
+  "大頭照",
+  "報名費用",
+  "收執聯",
+  "更新時間"
+];
 
-    function jsonp(action, payload = {}) {
-      return new Promise(resolve => {
-        const cb = "jept_cb_" + Date.now() + Math.random().toString(16).slice(2);
-        const script = document.createElement("script");
-        const done = data => { delete window[cb]; script.remove(); resolve(data || {ok:false,message:"後端沒有回傳資料"}); };
-        window[cb] = done;
-        script.onerror = () => done({ok:false,message:"連線失敗，請確認 Apps Script 部署狀態"});
-        const params = new URLSearchParams({action, callback: cb, ...payload});
-        script.src = API_ENDPOINT + "?" + params.toString();
-        document.body.appendChild(script);
-        setTimeout(() => done({ok:false,message:"後端逾時，請稍後再試"}), 15000);
-      });
+const LEVEL_HEADERS = [
+  "分校ID",
+  "分校名稱",
+  "分校代碼",
+  "級數ID",
+  "級數",
+  "檢定項目",
+  "教材",
+  "班級",
+  "費用",
+  "開放"
+];
+
+const MANAGEMENT_HEADERS = [
+  "列印勾選",
+  "報名編號",
+  "分校",
+  "學生姓名",
+  "原報名級數",
+  "老師確認級數",
+  "教材",
+  "班級",
+  "費用",
+  "健保卡資料",
+  "大頭照",
+  "報名費用",
+  "收執聯",
+  "備註",
+  "更新時間"
+];
+
+const DEFAULT_LEVELS = [
+  ["1", "第一級", "聽力、閱讀", "TJ1~4", "TQ、TK、TV、TG", 850, true],
+  ["2", "第二級", "聽力、閱讀", "TJ1~8", "TW、TF、TN、TI", 850, true],
+  ["3", "第三級", "聽力、閱讀", "MJ1~2", "X", 850, true],
+  ["4", "第四級", "聽力、閱讀", "MJ1~4", "MZ", 850, true],
+  ["5", "第五級", "聽力、閱讀、寫作", "MJ1~7", "ME、MT、MU", 1100, true],
+  ["6", "第六級", "聽力、閱讀、寫作", "MJ1~10", "MA、MCB、MP、MXA、MXB", 1100, true],
+  ["7", "第七級", "聽力、閱讀、寫作、口說", "MJ1~13", "MB、MLA、MLB", 1250, true],
+  ["8", "第八級", "聽力、閱讀、寫作、口說", "MJ1~16", "X", 1250, true]
+];
+
+function setupSheets() {
+  const ss = spreadsheet_();
+  setupConfigSheet_(ss);
+  setupLevelSheet_(ss);
+  ensureHeaders_(getOrCreateSheet_(ss, SHEET_NAMES.registrations), REGISTRATION_HEADERS);
+  ensureHeaders_(getOrCreateSheet_(ss, SHEET_NAMES.receipts), RECEIPT_HEADERS);
+  setupManagementSheet_(ss);
+  syncManagementSheet_();
+  installManagementEditTrigger();
+}
+
+function onOpen() {
+  SpreadsheetApp.getUi()
+    .createMenu("JEPT管理")
+    .addItem("初始化／檢查工作表", "setupSheets")
+    .addItem("依分校與級數排序", "sortManagementSheet")
+    .addItem("產生勾選學生收件表", "createSelectedChecklist")
+    .addItem("產生勾選學生收執聯", "createSelectedReceipts")
+    .addItem("清除列印勾選", "clearPrintSelection")
+    .addToUi();
+}
+
+function doGet(e) {
+  const params = (e && e.parameter) || {};
+  try {
+    const action = String(params.action || "config");
+    if (params.page === "admin" || action === "admin") return adminPage_();
+    if (action === "config") return respond_(publicConfig_(), params);
+    if (action === "lookup") return respond_(lookupRegistration_(params), params);
+    return respond_({ ok: false, message: "不支援的公開操作" }, params);
+  } catch (error) {
+    return respond_({ ok: false, message: error.message || String(error) }, params);
+  }
+}
+
+function doPost(e) {
+  try {
+    const payload = parsePayload_(e);
+    if (String(payload.action || "submit") !== "submit") {
+      return json_({ ok: false, message: "不支援的寫入操作" });
     }
+    const result = saveRegistration_(payload);
+    if (payload.__reply === "postMessage") return postMessage_(result, payload.__nonce);
+    return json_(result);
+  } catch (error) {
+    const payload = parsePayload_(e);
+    const result = { ok: false, message: error.message || String(error) };
+    if (payload.__reply === "postMessage") return postMessage_(result, payload.__nonce);
+    return json_(result);
+  }
+}
 
-    function postSubmit(payload) {
-      return new Promise(resolve => {
-        const nonce = "n" + Date.now() + Math.random().toString(16).slice(2);
-        const frame = document.createElement("iframe");
-        const form = document.createElement("form");
-        const cleanup = () => setTimeout(() => { frame.remove(); form.remove(); window.removeEventListener("message", onMessage); }, 100);
-        const timer = setTimeout(() => { cleanup(); resolve({ok:false,message:"後端逾時，請稍後再試"}); }, 20000);
-        const onMessage = event => {
-          const data = event.data || {};
-          if (data.source !== "jept-registration" || data.nonce !== nonce) return;
-          clearTimeout(timer);
-          cleanup();
-          resolve(data.payload || {ok:false,message:"後端沒有回傳資料"});
-        };
-        window.addEventListener("message", onMessage);
-        frame.name = "jeptSubmitFrame" + nonce;
-        frame.style.display = "none";
-        form.method = "POST";
-        form.action = API_ENDPOINT;
-        form.target = frame.name;
-        form.style.display = "none";
-        const input = document.createElement("input");
-        input.name = "payload";
-        input.value = JSON.stringify({...payload, action:"submit", __reply:"postMessage", __nonce:nonce});
-        form.appendChild(input);
-        document.body.appendChild(frame);
-        document.body.appendChild(form);
-        form.submit();
-      });
+function getConfigForAdmin() {
+  requireAdmin_();
+  return publicConfig_().config;
+}
+
+function saveConfigFromAdmin(config) {
+  requireAdmin_();
+  const clean = normalizeConfig_(config || {});
+  const sheet = getOrCreateSheet_(spreadsheet_(), SHEET_NAMES.config);
+  ensureHeaders_(sheet, ["設定名稱", "設定值"]);
+  const values = [
+    ["edition", clean.edition],
+    ["pageTitle", clean.pageTitle],
+    ["mainTitle", clean.mainTitle],
+    ["heroTagline", clean.heroTagline],
+    ["practiceMockDate", clean.practiceMockDate],
+    ["realisticMockDate", clean.realisticMockDate],
+    ["examDate", clean.examDate],
+    ["signupDate", clean.signupDate],
+    ["applyIntro", clean.applyIntro]
+  ];
+  replaceBody_(sheet, values);
+  return { ok: true, config: clean };
+}
+
+function adminPage_() {
+  requireAdmin_();
+  return HtmlService.createHtmlOutputFromFile("Admin").setTitle("JEPT 活動設定");
+}
+
+function publicConfig_() {
+  const ss = spreadsheet_();
+  setupConfigSheet_(ss);
+  setupLevelSheet_(ss);
+  const config = normalizeConfig_(readConfig_(ss));
+  const levels = readLevels_(ss);
+  return {
+    ok: true,
+    config,
+    campuses: CAMPUSES.map(c => ({ id: c.id, name: c.name })),
+    levels: levels
+      .filter(l => l.open)
+      .map(l => ({
+        campus: l.campus,
+        id: l.id,
+        levelName: l.levelName,
+        examItems: l.examItems,
+        material: l.material,
+        className: l.className,
+        fee: l.fee
+      }))
+  };
+}
+
+function saveRegistration_(payload) {
+  const ss = spreadsheet_();
+  setupConfigSheet_(ss);
+  setupLevelSheet_(ss);
+  const levels = readLevels_(ss);
+  const data = normalizeRegistrationPayload_(payload, levels);
+  const lock = LockService.getScriptLock();
+  lock.waitLock(30000);
+  try {
+    const regSheet = getOrCreateSheet_(ss, SHEET_NAMES.registrations);
+    const receiptSheet = getOrCreateSheet_(ss, SHEET_NAMES.receipts);
+    ensureHeaders_(regSheet, REGISTRATION_HEADERS);
+    ensureHeaders_(receiptSheet, RECEIPT_HEADERS);
+    const edition = readConfig_(ss).edition || CONFIG_DEFAULTS.edition;
+    if (hasDuplicateRegistration_(regSheet, edition, data.campus.id, data.nationalId)) {
+      return { ok: false, message: "此學生本屆已有報名紀錄，請使用報名查詢或聯絡分校。" };
     }
-
-    function show(el, type, html) {
-      el.className = type;
-      el.innerHTML = html;
+    const id = nextRegistrationId_(regSheet, edition);
+    appendByHeader_(regSheet, {
+      "報名時間": new Date(),
+      "報名編號": id,
+      "屆數": edition,
+      "分校ID": data.campus.id,
+      "分校代碼": data.campus.code,
+      "分校名稱": data.campus.name,
+      "中文姓名": data.chineseName,
+      "英文姓名": data.englishName,
+      "性別": data.gender,
+      "身分證字號": data.nationalId,
+      "西元出生日期": data.birthDate,
+      "就讀年級": data.schoolGrade,
+      "聯絡電話": data.phone,
+      "緊急連絡人手機": data.emergencyPhone,
+      "家長緊急聯絡人姓名": data.emergencyName,
+      "報名級數ID": data.level.id,
+      "報名級數": data.level.levelName,
+      "教材": data.level.material,
+      "班級": data.level.className,
+      "費用": data.level.fee,
+      "狀態": "待老師確認"
+    });
+    appendByHeader_(receiptSheet, {
+      "報名編號": id,
+      "健保卡資料": "未確認",
+      "大頭照": "未收到",
+      "報名費用": "未繳費",
+      "收執聯": "未列印",
+      "更新時間": new Date()
+    });
+    try {
+      syncSingleManagementRow_(id);
+    } catch (error) {
+      console.error("單筆收件管理同步失敗：" + (error && error.message ? error.message : String(error)));
     }
-
-    function campusOptions(selected = "") {
-      return state.campuses.map(c => `<option value="${esc(c.id)}" ${selected===c.id?"selected":""}>${esc(c.name)}</option>`).join("");
-    }
-
-    function levelsFor(campus) {
-      return state.levels.filter(l => l.campus === campus);
-    }
-
-    function render() {
-      const c = state.config;
-      document.title = "佳音JEPT報名系統";
-      $("#editionText").innerHTML = `<span class="edition-number">${esc(c.edition || "45")}</span><span class="edition-suffix">th</span>`;
-      $("#mainTitle").textContent = c.mainTitle || "佳音體系代報名管理";
-      $("#heroTagline").textContent = c.heroTagline || "";
-      $("#practiceMockText").textContent = c.practiceMockDate || "待公告";
-      $("#realisticMockText").textContent = c.realisticMockDate || "待公告";
-      $("#examDateText").textContent = c.examDate || "";
-      $("#signupDateText").textContent = c.signupDate || "";
-      $("#applyIntro").textContent = c.applyIntro || "";
-      $$('select[name="campus"]').forEach(s => {
-        const selected = s.value || (state.campuses[0] && state.campuses[0].id) || "";
-        s.innerHTML = campusOptions(selected);
-      });
-      renderLevelSelect();
-      renderApplyLevelReference();
-    }
-
-    function renderLevelSelect() {
-      const campus = $('#applyForm select[name="campus"]').value;
-      const select = $('#applyForm select[name="desiredLevelId"]');
-      select.innerHTML = '<option value="">請選擇報考級數</option>' + levelsFor(campus).map(l => `<option value="${esc(l.id)}">${esc(l.levelName)} - ${esc(l.material)} - ${esc(l.fee)}元</option>`).join("");
-    }
-
-    function renderApplyLevelReference() {
-      const campus = $('#applyForm select[name="campus"]').value || (state.campuses[0] && state.campuses[0].id);
-      const rows = levelsFor(campus);
-      const box = $("#applyLevelReference");
-      if (!rows.length) {
-        box.innerHTML = '<div class="notice">目前此分校尚未開放級數。</div>';
-        return;
+    return {
+      ok: true,
+      message: "報名已送出，請至佳音櫃台繳交報名費，並依櫃檯或老師通知繳交照片資料。",
+      result: {
+        studentName: data.chineseName,
+        levelName: data.level.levelName,
+        material: data.level.material,
+        fee: data.level.fee
       }
-      box.innerHTML = `<div class="level-reference">${rows.map(l => `<article class="level-ref-card">
-        <div class="level-ref-class">適用班級：${esc(l.className)}</div>
-        <div><strong>建議報考級數：</strong>${esc(l.levelName)}</div>
-        <div><strong>教材：</strong>${esc(l.material)}</div>
-        <div><strong>檢定項目：</strong>${esc(l.examItems)}</div>
-        <div><strong>費用：</strong>${esc(l.fee)}元</div>
-      </article>`).join("")}</div>`;
+    };
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+function lookupRegistration_(params) {
+  const campusId = String(params.campus || "").trim();
+  const chineseName = String(params.chineseName || "").trim();
+  const phoneLast3 = String(params.phoneLast3 || "").replace(/\D/g, "");
+  assertCampus_(campusId);
+  if (!chineseName || chineseName.length > 20) throw new Error("請輸入孩子中文姓名");
+  if (!/^\d{3}$/.test(phoneLast3)) throw new Error("電話後三碼格式不正確");
+  checkLookupLimit_(campusId, chineseName, phoneLast3);
+
+  const ss = spreadsheet_();
+  const registrations = getSheetObjects_(getOrCreateSheet_(ss, SHEET_NAMES.registrations));
+  const managementRows = getSheetObjects_(getOrCreateSheet_(ss, SHEET_NAMES.management));
+  const matches = registrations.filter(row =>
+    String(row["分校ID"] || "") === campusId &&
+    String(row["中文姓名"] || "") === chineseName &&
+    String(row["聯絡電話"] || "").replace(/\D/g, "").slice(-3) === phoneLast3
+  );
+  if (!matches.length) {
+    recordLookupFailure_(campusId, chineseName, phoneLast3);
+    return { ok: false, message: "查無資料，請確認分校、姓名或電話後三碼。" };
+  }
+  const row = matches[matches.length - 1];
+  const management = managementRows.find(r => String(r["報名編號"] || "") === String(row["報名編號"] || "")) || {};
+  const config = normalizeConfig_(readConfig_(ss));
+  return {
+    ok: true,
+    result: {
+      studentName: maskName_(row["中文姓名"]),
+      levelName: safeRead_(management["老師確認級數"] || row["報名級數"]),
+      material: safeRead_(management["教材"] || row["教材"]),
+      practiceMockDate: config.practiceMockDate,
+      realisticMockDate: config.realisticMockDate,
+      examDate: config.examDate,
+      healthCard: management["健保卡資料"] === true ? "已確認" : "未確認",
+      headshot: management["大頭照"] === true ? "已收到" : "未收到",
+      paid: management["報名費用"] === true ? "已繳費" : "未繳費"
     }
+  };
+}
 
-    function validateApply(data) {
-      const id = String(data.nationalId || "").toUpperCase();
-      if (!/^[A-Z][12]\d{8}$/.test(id)) return "身分證字號格式不正確。";
-      if ((data.gender === "男" && id[1] !== "1") || (data.gender === "女" && id[1] !== "2")) return "身分證字號第二碼需與性別相符。";
-      if (!/^\d{4}$/.test(data.birthYear) || Number(data.birthMonth) < 1 || Number(data.birthMonth) > 12 || Number(data.birthDay) < 1 || Number(data.birthDay) > 31) return "生日格式不正確。";
-      if (!/^\d{8,10}$/.test(digits(data.phone))) return "聯絡電話格式不正確。";
-      if (!/^09\d{8}$/.test(digits(data.emergencyPhone))) return "家長緊急聯絡人手機需為 09 開頭共 10 碼。";
-      return "";
+function normalizeRegistrationPayload_(payload, levels) {
+  const campus = assertCampus_(payload.campus);
+  const levelId = String(payload.desiredLevelId || payload.levelId || "").trim();
+  const level = levels.find(l => l.campus === campus.id && l.id === levelId && l.open);
+  if (!level) throw new Error("報名級數不在目前開放清單中");
+
+  const gender = safeInput_(payload.gender);
+  if (gender !== "男" && gender !== "女") throw new Error("請選擇性別");
+
+  const nationalId = String(payload.nationalId || "").trim().toUpperCase();
+  validateTaiwanId_(nationalId, gender);
+
+  const y = String(payload.birthYear || "").trim();
+  const m = String(payload.birthMonth || "").trim();
+  const d = String(payload.birthDay || "").trim();
+  const birthDate = validateBirthDate_(y, m, d);
+
+  const phone = formatPhone_(payload.phone);
+  const emergencyPhone = formatMobile_(payload.emergencyPhone);
+
+  const schoolGrade = safeInput_(payload.schoolGrade);
+  if (!/^國小[一二三四五六]年級$/.test(schoolGrade)) throw new Error("就讀年級格式不正確");
+
+  const chineseName = safeInput_(payload.chineseName);
+  if (!/^[\u4e00-\u9fff]{2,10}$/.test(chineseName)) throw new Error("中文姓名格式不正確");
+
+  return {
+    campus,
+    level,
+    chineseName,
+    englishName: safeInput_(payload.englishName, 30),
+    gender,
+    nationalId,
+    birthDate,
+    schoolGrade,
+    phone,
+    emergencyPhone,
+    emergencyName: safeInput_(payload.emergencyName, 30)
+  };
+}
+
+function validateTaiwanId_(id, gender) {
+  if (!/^[A-Z][12]\d{8}$/.test(id)) throw new Error("身分證字號格式不正確");
+  if ((gender === "男" && id[1] !== "1") || (gender === "女" && id[1] !== "2")) {
+    throw new Error("身分證字號第二碼與性別不符");
+  }
+  const codes = {
+    A: 10, B: 11, C: 12, D: 13, E: 14, F: 15, G: 16, H: 17, I: 34, J: 18,
+    K: 19, L: 20, M: 21, N: 22, O: 35, P: 23, Q: 24, R: 25, S: 26, T: 27,
+    U: 28, V: 29, W: 32, X: 30, Y: 31, Z: 33
+  };
+  const n = codes[id[0]];
+  const digits = [Math.floor(n / 10), n % 10].concat(id.slice(1).split("").map(Number));
+  const weights = [1, 9, 8, 7, 6, 5, 4, 3, 2, 1, 1];
+  const sum = digits.reduce((total, digit, index) => total + digit * weights[index], 0);
+  if (sum % 10 !== 0) throw new Error("身分證字號檢查碼不正確");
+}
+
+function validateBirthDate_(y, m, d) {
+  if (!/^\d{4}$/.test(y) || !/^\d{1,2}$/.test(m) || !/^\d{1,2}$/.test(d)) throw new Error("生日格式不正確");
+  const yy = Number(y), mm = Number(m), dd = Number(d);
+  const nowYear = new Date().getFullYear();
+  if (yy < 1900 || yy > nowYear || mm < 1 || mm > 12 || dd < 1 || dd > 31) throw new Error("生日日期不合理");
+  const date = new Date(yy, mm - 1, dd);
+  if (date.getFullYear() !== yy || date.getMonth() !== mm - 1 || date.getDate() !== dd) throw new Error("生日日期不存在");
+  return [yy, String(mm).padStart(2, "0"), String(dd).padStart(2, "0")].join("-");
+}
+
+function formatPhone_(value) {
+  const digits = String(value || "").replace(/\D/g, "");
+  if (!/^\d{8,10}$/.test(digits)) throw new Error("聯絡電話格式不正確");
+  return digits.length === 10 ? digits.slice(0, 4) + "-" + digits.slice(4) : digits;
+}
+
+function formatMobile_(value) {
+  const digits = String(value || "").replace(/\D/g, "");
+  if (!/^09\d{8}$/.test(digits)) throw new Error("緊急連絡人手機需為 09 開頭共 10 碼");
+  return digits.slice(0, 4) + "-" + digits.slice(4);
+}
+
+function assertCampus_(campusId) {
+  const campus = CAMPUSES.find(c => c.id === String(campusId || "").trim());
+  if (!campus) throw new Error("分校資料不正確");
+  return campus;
+}
+
+function safeInput_(value, maxLength) {
+  const text = String(value || "").trim().slice(0, maxLength || 50);
+  return sanitizeForSheet_(text);
+}
+
+function safeRead_(value) {
+  return String(value || "").replace(/^'/, "");
+}
+
+function sanitizeForSheet_(value) {
+  const text = String(value || "").replace(/[\u0000-\u001f\u007f]/g, "").trim();
+  return /^[=+\-@]/.test(text) ? "'" + text : text;
+}
+
+function checkLookupLimit_(campus, name, last3) {
+  const cache = CacheService.getScriptCache();
+  const globalKey = "lookupGlobal:" + Utilities.formatDate(new Date(), Session.getScriptTimeZone(), "yyyyMMddHHmm");
+  const globalCount = Number(cache.get(globalKey) || "0");
+  if (globalCount >= 120) throw new Error("查詢量較高，請稍後再試");
+  cache.put(globalKey, String(globalCount + 1), 90);
+
+  const key = "lookup:" + campus + ":" + name + ":" + last3;
+  const count = Number(cache.get(key) || "0");
+  if (count >= 20) throw new Error("查詢次數過多，請稍後再試");
+  cache.put(key, String(count + 1), 600);
+
+  const failKey = "lookupFail:" + campus + ":" + name + ":" + last3;
+  if (Number(cache.get(failKey) || "0") >= 5) throw new Error("查詢錯誤次數過多，請 10 分鐘後再試");
+}
+
+function recordLookupFailure_(campus, name, last3) {
+  const cache = CacheService.getScriptCache();
+  const key = "lookupFail:" + campus + ":" + name + ":" + last3;
+  cache.put(key, String(Number(cache.get(key) || "0") + 1), 600);
+}
+
+function spreadsheet_() {
+  const props = PropertiesService.getScriptProperties();
+  const savedId = String(props.getProperty(SPREADSHEET_ID_PROPERTY) || "").trim();
+  if (savedId) return SpreadsheetApp.openById(savedId);
+  const active = SpreadsheetApp.getActiveSpreadsheet();
+  if (active) {
+    props.setProperty(SPREADSHEET_ID_PROPERTY, active.getId());
+    return active;
+  }
+  throw new Error("尚未設定 Script Properties 的 SPREADSHEET_ID。請先在正確的 Google 試算表中執行 setupSheets。");
+}
+
+function setupConfigSheet_(ss) {
+  const sheet = getOrCreateSheet_(ss, SHEET_NAMES.config);
+  ensureHeaders_(sheet, ["設定名稱", "設定值"]);
+  if (sheet.getLastRow() <= 1) {
+    replaceBody_(sheet, Object.keys(CONFIG_DEFAULTS).map(key => [key, CONFIG_DEFAULTS[key]]));
+  }
+}
+
+function setupLevelSheet_(ss) {
+  const sheet = getOrCreateSheet_(ss, SHEET_NAMES.levels);
+  ensureHeaders_(sheet, LEVEL_HEADERS);
+  if (sheet.getLastRow() <= 1) {
+    const rows = [];
+    CAMPUSES.forEach(campus => {
+      DEFAULT_LEVELS.forEach(level => rows.push([
+        campus.id, campus.name, campus.code, level[0], level[1], level[2], level[3], level[4], level[5], level[6]
+      ]));
+    });
+    replaceBody_(sheet, rows);
+  }
+}
+
+function readConfig_(ss) {
+  const sheet = getOrCreateSheet_(ss, SHEET_NAMES.config);
+  ensureHeaders_(sheet, ["設定名稱", "設定值"]);
+  const rows = sheet.getDataRange().getValues().slice(1);
+  const config = { ...CONFIG_DEFAULTS };
+  rows.forEach(row => {
+    const key = String(row[0] || "").trim();
+    if (key) config[key] = String(row[1] || "").trim();
+  });
+  return config;
+}
+
+function normalizeConfig_(config) {
+  const next = { ...CONFIG_DEFAULTS, ...(config || {}) };
+  next.pageTitle = "佳音JEPT報名系統";
+  const edition = Number(next.edition);
+  if (!Number.isInteger(edition) || edition < 1 || edition > 99) next.edition = CONFIG_DEFAULTS.edition;
+  return Object.keys(CONFIG_DEFAULTS).reduce((obj, key) => {
+    obj[key] = sanitizeForSheet_(next[key]);
+    return obj;
+  }, {});
+}
+
+function readLevels_(ss) {
+  const sheet = getOrCreateSheet_(ss, SHEET_NAMES.levels);
+  ensureHeaders_(sheet, LEVEL_HEADERS);
+  return getSheetObjects_(sheet).map(row => ({
+    campus: String(row["分校ID"] || "").trim(),
+    campusName: String(row["分校名稱"] || "").trim(),
+    campusCode: String(row["分校代碼"] || "").trim(),
+    id: String(row["級數ID"] || "").trim(),
+    levelName: String(row["級數"] || "").trim(),
+    examItems: String(row["檢定項目"] || "").trim(),
+    material: String(row["教材"] || "").trim(),
+    className: String(row["班級"] || "").trim(),
+    fee: Number(row["費用"] || 0),
+    open: String(row["開放"]).toUpperCase() !== "FALSE" && String(row["開放"]) !== "否"
+  })).filter(l => l.campus && l.id && l.levelName);
+}
+
+function setupManagementSheet_(ss) {
+  const sheet = getOrCreateSheet_(ss, SHEET_NAMES.management);
+  ensureHeaders_(sheet, MANAGEMENT_HEADERS);
+  sheet.setFrozenRows(1);
+  applyManagementValidations_(sheet, readLevels_(ss));
+}
+
+function syncManagementSheet_() {
+  const ss = spreadsheet_();
+  const regSheet = getOrCreateSheet_(ss, SHEET_NAMES.registrations);
+  const receiptSheet = getOrCreateSheet_(ss, SHEET_NAMES.receipts);
+  const managementSheet = getOrCreateSheet_(ss, SHEET_NAMES.management);
+  ensureHeaders_(regSheet, REGISTRATION_HEADERS);
+  ensureHeaders_(receiptSheet, RECEIPT_HEADERS);
+  ensureHeaders_(managementSheet, MANAGEMENT_HEADERS);
+
+  const levels = readLevels_(ss);
+  const existing = getSheetObjects_(managementSheet).reduce((map, row) => {
+    const id = String(row["報名編號"] || "");
+    if (id) map[id] = row;
+    return map;
+  }, {});
+  const receipts = getSheetObjects_(receiptSheet).reduce((map, row) => {
+    const id = String(row["報名編號"] || "");
+    if (id) map[id] = row;
+    return map;
+  }, {});
+  const registrations = getSheetObjects_(regSheet);
+  registrations.forEach(reg => {
+    const id = String(reg["報名編號"] || "");
+    const old = existing[id] || {};
+    const receipt = receipts[id] || {};
+    const campusId = String(reg["分校ID"] || "");
+    const originalLevel = levelFromRegistration_(reg, levels);
+    const selectedLabel = String(old["老師確認級數"] || "") || levelLabel_(originalLevel);
+    const selectedLevel = levelByLabel_(levels, campusId, selectedLabel) || originalLevel;
+    upsertManagementRow_(managementSheet, [
+      old["列印勾選"] === true,
+      id,
+      String(reg["分校名稱"] || ""),
+      String(reg["中文姓名"] || ""),
+      levelLabel_(originalLevel),
+      levelLabel_(selectedLevel),
+      selectedLevel ? selectedLevel.material : String(reg["教材"] || ""),
+      selectedLevel ? selectedLevel.className : String(reg["班級"] || ""),
+      selectedLevel ? selectedLevel.fee : String(reg["費用"] || ""),
+      old["健保卡資料"] === true || String(receipt["健保卡資料"] || "") === "已確認",
+      old["大頭照"] === true || ["已收到", "已收"].includes(String(receipt["大頭照"] || "")),
+      old["報名費用"] === true || ["已繳費", "已繳"].includes(String(receipt["報名費用"] || "")),
+      String(old["收執聯"] || receipt["收執聯"] || "未產生"),
+      String(old["備註"] || ""),
+      old["更新時間"] || receipt["更新時間"] || ""
+    ]);
+  });
+  applyManagementValidations_(managementSheet, levels);
+  syncAllReceiptsFromManagement_();
+}
+
+function syncSingleManagementRow_(registrationId) {
+  const id = String(registrationId || "");
+  if (!id) return;
+  const ss = spreadsheet_();
+  const regSheet = getOrCreateSheet_(ss, SHEET_NAMES.registrations);
+  const receiptSheet = getOrCreateSheet_(ss, SHEET_NAMES.receipts);
+  const managementSheet = getOrCreateSheet_(ss, SHEET_NAMES.management);
+  ensureHeaders_(regSheet, REGISTRATION_HEADERS);
+  ensureHeaders_(receiptSheet, RECEIPT_HEADERS);
+  ensureHeaders_(managementSheet, MANAGEMENT_HEADERS);
+
+  const levels = readLevels_(ss);
+  const reg = getSheetObjects_(regSheet).find(row => String(row["報名編號"] || "") === id);
+  if (!reg) throw new Error("找不到本次報名資料：" + id);
+  const receipt = getSheetObjects_(receiptSheet).find(row => String(row["報名編號"] || "") === id) || {};
+  const old = getSheetObjects_(managementSheet).find(row => String(row["報名編號"] || "") === id) || {};
+  const campusId = String(reg["分校ID"] || "");
+  const originalLevel = levelFromRegistration_(reg, levels);
+  const selectedLabel = String(old["老師確認級數"] || "") || levelLabel_(originalLevel);
+  const selectedLevel = levelByLabel_(levels, campusId, selectedLabel) || originalLevel;
+  const rowNumber = upsertManagementRow_(managementSheet, [
+    old["列印勾選"] === true,
+    id,
+    String(reg["分校名稱"] || ""),
+    String(reg["中文姓名"] || ""),
+    levelLabel_(originalLevel),
+    levelLabel_(selectedLevel),
+    selectedLevel ? selectedLevel.material : String(reg["教材"] || ""),
+    selectedLevel ? selectedLevel.className : String(reg["班級"] || ""),
+    selectedLevel ? selectedLevel.fee : String(reg["費用"] || ""),
+    old["健保卡資料"] === true || String(receipt["健保卡資料"] || "") === "已確認",
+    old["大頭照"] === true || ["已收到", "已收"].includes(String(receipt["大頭照"] || "")),
+    old["報名費用"] === true || ["已繳費", "已繳"].includes(String(receipt["報名費用"] || "")),
+    String(old["收執聯"] || receipt["收執聯"] || "未產生"),
+    String(old["備註"] || ""),
+    old["更新時間"] || receipt["更新時間"] || ""
+  ]);
+  applyManagementRowValidation_(managementSheet, rowNumber, levels, String(reg["分校名稱"] || ""));
+}
+
+function applyManagementValidations_(sheet, levels) {
+  const lastRow = Math.max(sheet.getMaxRows(), 2);
+  const checkbox = SpreadsheetApp.newDataValidation().requireCheckbox().build();
+  [1, 10, 11, 12].forEach(col => sheet.getRange(2, col, lastRow - 1, 1).setDataValidation(checkbox));
+  const rows = sheet.getLastRow();
+  if (rows < 2) return;
+  const values = sheet.getRange(2, 1, rows - 1, MANAGEMENT_HEADERS.length).getValues();
+  values.forEach((row, index) => {
+    const campusName = String(row[2] || "");
+    const campus = CAMPUSES.find(c => c.name === campusName);
+    if (!campus) return;
+    const list = levels.filter(l => l.campus === campus.id && l.open).map(levelLabel_);
+    if (list.length) {
+      const rule = SpreadsheetApp.newDataValidation().requireValueInList(list, true).build();
+      sheet.getRange(index + 2, 6).setDataValidation(rule);
     }
+  });
+}
 
-    async function loadConfig() {
-      const result = await jsonp("config");
-      if (!result.ok) {
-        show($("#applyMsg"), "warn", esc(result.message || "設定讀取失敗"));
-        return;
-      }
-      state.config = result.config || {};
-      state.campuses = result.campuses || [];
-      state.levels = result.levels || [];
-      render();
+function applyManagementRowValidation_(sheet, rowNumber, levels, campusName) {
+  if (!rowNumber || rowNumber < 2) return;
+  const checkbox = SpreadsheetApp.newDataValidation().requireCheckbox().build();
+  [1, 10, 11, 12].forEach(col => sheet.getRange(rowNumber, col).setDataValidation(checkbox));
+  const campus = CAMPUSES.find(c => c.name === String(campusName || ""));
+  if (!campus) return;
+  const list = levels.filter(l => l.campus === campus.id && l.open).map(levelLabel_);
+  if (list.length) {
+    const rule = SpreadsheetApp.newDataValidation().requireValueInList(list, true).build();
+    sheet.getRange(rowNumber, 6).setDataValidation(rule);
+  }
+}
+
+function installManagementEditTrigger() {
+  const ss = spreadsheet_();
+  const spreadsheetId = ss.getId();
+  const handlerName = "handleManagementEdit";
+  const exists = ScriptApp.getProjectTriggers().some(trigger => {
+    if (trigger.getHandlerFunction() !== handlerName) return false;
+    if (trigger.getEventType() !== ScriptApp.EventType.ON_EDIT) return false;
+    try {
+      return trigger.getTriggerSourceId && trigger.getTriggerSourceId() === spreadsheetId;
+    } catch (error) {
+      return true;
     }
+  });
+  if (!exists) {
+    ScriptApp.newTrigger(handlerName)
+      .forSpreadsheet(ss)
+      .onEdit()
+      .create();
+  }
+  return exists ? "收件管理編輯觸發器已存在" : "收件管理編輯觸發器已建立";
+}
 
-    $$(".tab").forEach(btn => btn.addEventListener("click", () => {
-      $$(".tab").forEach(b => b.classList.toggle("active", b === btn));
-      ["apply","lookup"].forEach(id => $("#" + id).classList.toggle("hidden", btn.dataset.page !== id));
-    }));
+function handleManagementEdit(e) {
+  if (!e || !e.range || e.range.getSheet().getName() !== SHEET_NAMES.management) return;
+  if (e.range.getRow() < 2) return;
+  const col = e.range.getColumn();
+  if (![1, 6, 10, 11, 12, 13, 14].includes(col)) return;
+  updateManagementRow_(e.range.getRow());
+}
 
-    $('#applyForm select[name="campus"]').addEventListener("change", () => {
-      renderLevelSelect();
-      renderApplyLevelReference();
-      $("#levelHelp").open = false;
-    });
-    const applyForm = $("#applyForm");
-    const phoneInput = $('#applyForm input[name="phone"]');
-    const emergencyPhoneInput = $('#applyForm input[name="emergencyPhone"]');
-    let emergencyPhoneEdited = false;
-    phoneInput.addEventListener("input", event => {
-      if (!emergencyPhoneEdited) emergencyPhoneInput.value = event.target.value;
-    });
-    emergencyPhoneInput.addEventListener("input", () => {
-      emergencyPhoneEdited = true;
-    });
-    applyForm.addEventListener("reset", () => {
-      emergencyPhoneEdited = false;
-    });
+function updateManagementRow_(rowNumber) {
+  const ss = spreadsheet_();
+  const sheet = getOrCreateSheet_(ss, SHEET_NAMES.management);
+  const levels = readLevels_(ss);
+  const row = sheet.getRange(rowNumber, 1, 1, MANAGEMENT_HEADERS.length).getValues()[0];
+  const campus = CAMPUSES.find(c => c.name === String(row[2] || ""));
+  const selected = campus ? levelByLabel_(levels, campus.id, String(row[5] || "")) : null;
+  if (selected) {
+    sheet.getRange(rowNumber, 7, 1, 3).setValues([[selected.material, selected.className, selected.fee]]);
+  }
+  sheet.getRange(rowNumber, 15).setValue(new Date());
+  updateReceiptFromManagementRow_(rowArrayToObject_(sheet.getRange(rowNumber, 1, 1, MANAGEMENT_HEADERS.length).getValues()[0]));
+}
 
-    applyForm.addEventListener("submit", async event => {
-      event.preventDefault();
-      const payload = Object.fromEntries(new FormData(event.currentTarget).entries());
-      const error = validateApply(payload);
-      if (error) {
-        show($("#applyMsg"), "warn", esc(error));
-        return;
-      }
-      show($("#applyMsg"), "info", "送出中，請稍候...");
-      const result = await postSubmit(payload);
-      if (!result.ok) {
-        show($("#applyMsg"), "warn", esc(result.message || "送出失敗，請稍後再試或洽佳音櫃檯。"));
-        return;
-      }
-      const r = result.result || {};
-      $("#applyMsg").className = "hidden";
-      show($("#successBox"), "success", `<strong>報名已送出。</strong><br>學生：${esc(r.studentName || "")}<br>報名級數：${esc(r.levelName || "")}<br>教材：${esc(r.material || "")}<br>費用：${esc(r.fee || "")}元<br><br>請至佳音櫃台繳交報名費。<br>請將健保卡正面照片傳至官方 LINE。<br>請將學生大頭照傳至官方 LINE，大頭照需使用乾淨淺色背景、臉部清楚。`);
-      event.currentTarget.reset();
-      renderLevelSelect();
-    });
+function syncAllReceiptsFromManagement_() {
+  const sheet = getOrCreateSheet_(spreadsheet_(), SHEET_NAMES.management);
+  getSheetObjects_(sheet).forEach(updateReceiptFromManagementRow_);
+}
 
-    $("#lookupForm").addEventListener("submit", async event => {
-      event.preventDefault();
-      const data = Object.fromEntries(new FormData(event.currentTarget).entries());
-      const result = await jsonp("lookup", data);
-      if (!result.ok) {
-        $("#lookupResult").className = "hidden";
-        show($("#lookupMsg"), "warn", esc(result.message || "查詢失敗"));
-        return;
-      }
-      const r = result.result || {};
-      $("#lookupMsg").className = "hidden";
-      show($("#lookupResult"), "info", `<strong>查詢結果</strong><br>學生姓名：${esc(r.studentName)}<br>報名級數：${esc(r.levelName)}<br>教材：${esc(r.material)}<br>練習模擬考：${esc(r.practiceMockDate)}<br>仿真模擬考：${esc(r.realisticMockDate)}<br>正式考試：${esc(r.examDate)}<br><br>健保卡資料：${esc(r.healthCard)}<br>大頭照：${esc(r.headshot)}<br>報名費用：${esc(r.paid)}`);
-    });
+function updateReceiptFromManagementRow_(row) {
+  const ss = spreadsheet_();
+  const receiptSheet = getOrCreateSheet_(ss, SHEET_NAMES.receipts);
+  ensureHeaders_(receiptSheet, RECEIPT_HEADERS);
+  const id = String(row["報名編號"] || "");
+  if (!id) return;
+  const receiptMap = {
+    "報名編號": id,
+    "健保卡資料": row["健保卡資料"] === true ? "已確認" : "未確認",
+    "大頭照": row["大頭照"] === true ? "已收到" : "未收到",
+    "報名費用": row["報名費用"] === true ? "已繳費" : "未繳費",
+    "收執聯": String(row["收執聯"] || "未產生"),
+    "更新時間": new Date()
+  };
+  upsertById_(receiptSheet, "報名編號", id, receiptMap);
+}
 
-    loadConfig();
-  </script>
-</body>
-</html>
+function sortManagementSheet() {
+  syncManagementSheet_();
+  const ss = spreadsheet_();
+  const sheet = getOrCreateSheet_(ss, SHEET_NAMES.management);
+  if (sheet.getLastRow() < 3) return;
+  const levels = readLevels_(ss);
+  const campusOrder = CAMPUSES.reduce((map, campus, index) => {
+    map[campus.name] = index;
+    return map;
+  }, {});
+  const levelOrder = levels.reduce((map, level, index) => {
+    map[levelLabel_(level)] = index;
+    return map;
+  }, {});
+  const range = sheet.getRange(2, 1, sheet.getLastRow() - 1, MANAGEMENT_HEADERS.length);
+  const rows = range.getValues();
+  rows.sort((a, b) =>
+    (campusOrder[String(a[2] || "")] ?? 999) - (campusOrder[String(b[2] || "")] ?? 999) ||
+    (levelOrder[String(a[5] || "")] ?? 999) - (levelOrder[String(b[5] || "")] ?? 999) ||
+    String(a[3] || "").localeCompare(String(b[3] || ""), "zh-Hant")
+  );
+  range.setValues(rows);
+  applyManagementValidations_(sheet, levels);
+}
+
+function clearPrintSelection() {
+  const sheet = getOrCreateSheet_(spreadsheet_(), SHEET_NAMES.management);
+  if (sheet.getLastRow() > 1) sheet.getRange(2, 1, sheet.getLastRow() - 1, 1).setValue(false);
+}
+
+function createSelectedChecklist() {
+  syncManagementSheet_();
+  const rows = selectedManagementRows_();
+  if (!rows.length) throw new Error("請先在收件管理勾選要列印的學生。");
+  const config = normalizeConfig_(readConfig_(spreadsheet_()));
+  const doc = DocumentApp.create("JEPT收件追蹤表-" + Utilities.formatDate(new Date(), Session.getScriptTimeZone(), "yyyyMMdd-HHmm"));
+  const body = doc.getBody();
+  body.setMarginTop(36).setMarginBottom(36).setMarginLeft(36).setMarginRight(36);
+  setPageSize_(body, 595, 842);
+  body.appendParagraph("第" + config.edition + "屆 JEPT 收件追蹤表").setHeading(DocumentApp.ParagraphHeading.HEADING1);
+  const table = body.appendTable([["分校", "屆數", "學生姓名", "確認級數", "健保卡", "大頭照", "繳費狀態", "備註"]]);
+  rows.forEach(row => {
+    const tr = table.appendTableRow();
+    [
+      String(row["分校"] || ""),
+      String(config.edition || ""),
+      String(row["學生姓名"] || ""),
+      String(row["老師確認級數"] || ""),
+      row["健保卡資料"] === true ? "已確認" : "未確認",
+      row["大頭照"] === true ? "已收到" : "未收到",
+      row["報名費用"] === true ? "已繳費" : "未繳費",
+      "　　　　　"
+    ].forEach(value => tr.appendTableCell(value));
+  });
+  doc.saveAndClose();
+  const pdf = saveDocAsPrivatePdf_(doc.getId(), doc.getName());
+  SpreadsheetApp.getUi().alert("收件追蹤表已產生：\n" + pdf.getName());
+}
+
+function createSelectedReceipts() {
+  syncManagementSheet_();
+  const rows = selectedManagementRows_();
+  if (!rows.length) throw new Error("請先在收件管理勾選要列印收執聯的學生。");
+  const config = normalizeConfig_(readConfig_(spreadsheet_()));
+  const doc = DocumentApp.create("JEPT報名費收執聯-" + Utilities.formatDate(new Date(), Session.getScriptTimeZone(), "yyyyMMdd-HHmm"));
+  const body = doc.getBody();
+  body.setMarginTop(18).setMarginBottom(18).setMarginLeft(20).setMarginRight(20);
+  setPageSize_(body, 842, 595);
+  for (let index = 0; index < rows.length; index += 2) {
+    if (index) body.appendPageBreak();
+    appendReceiptGridPage_(body, rows[index], rows[index + 1] || null, config);
+  }
+  doc.saveAndClose();
+  const pdf = saveDocAsPrivatePdf_(doc.getId(), doc.getName());
+  markSelectedReceiptsGenerated_();
+  SpreadsheetApp.getUi().alert("收執聯 PDF 已產生：\n" + pdf.getName());
+}
+
+function appendReceiptBlock_(cell, title, config, row) {
+  const isParentCopy = title === "家長聯";
+  const lines = [
+    "第" + String(config.edition || "") + "屆 JEPT 報名費收執聯（" + title + "）",
+    "分校：" + receiptText_(row["分校"]),
+    "學生姓名：" + receiptText_(row["學生姓名"]),
+    "報名級數：" + receiptLevelNameOnly_(row),
+    "教材：" + receiptText_(row["教材"]),
+    "金額：" + receiptMoneyText_(row["費用"]),
+    "經手人：________________",
+    "日期：________________"
+  ];
+  if (isParentCopy) {
+    lines.push(
+      "練習模擬考日期：" + receiptDateText_(config.practiceMockDate),
+      "仿真模擬考日期：" + receiptDateText_(config.realisticMockDate),
+      "正式考試日期：" + receiptDateText_(config.examDate),
+      "提醒：請將健保卡正面照片與學生大頭照傳至官方 LINE 給老師確認；大頭照請在乾淨、淺色背景前拍攝，臉部清楚、光線充足。"
+    );
+  } else {
+    lines.push(
+      "健保卡確認：[  ] 已確認",
+      "大頭照確認：[  ] 已收",
+      "繳費確認：[  ] 已繳",
+      "備註：________________________"
+    );
+  }
+  cell.setText(lines.join("\n"));
+  const text = cell.editAsText();
+  text.setFontFamily("Microsoft JhengHei");
+  text.setFontSize(10);
+  text.setBold(0, lines[0].length - 1, true);
+}
+
+function appendReceiptGridPage_(body, firstRow, secondRow, config) {
+  const table = body.appendTable([
+    ["", "", ""],
+    ["", "", ""],
+    ["", "", ""]
+  ]);
+  table.setBorderWidth(0);
+
+  setReceiptGridCell_(table.getRow(0).getCell(0), 390);
+  setReceiptGridCell_(table.getRow(0).getCell(1), 18);
+  setReceiptGridCell_(table.getRow(0).getCell(2), 390);
+  setReceiptGridCell_(table.getRow(1).getCell(0), 390);
+  setReceiptGridCell_(table.getRow(1).getCell(1), 18);
+  setReceiptGridCell_(table.getRow(1).getCell(2), 390);
+  setReceiptGridCell_(table.getRow(2).getCell(0), 390);
+  setReceiptGridCell_(table.getRow(2).getCell(1), 18);
+  setReceiptGridCell_(table.getRow(2).getCell(2), 390);
+
+  appendReceiptBlock_(table.getRow(0).getCell(0), "家長聯", config, firstRow);
+  appendReceiptVerticalCutCell_(table.getRow(0).getCell(1));
+  appendReceiptMaybeBlock_(table.getRow(0).getCell(2), "家長聯", config, secondRow);
+
+  appendReceiptHorizontalCutCell_(table.getRow(1).getCell(0));
+  appendReceiptCrossCutCell_(table.getRow(1).getCell(1));
+  appendReceiptHorizontalCutCell_(table.getRow(1).getCell(2));
+
+  appendReceiptBlock_(table.getRow(2).getCell(0), "佳音留存聯", config, firstRow);
+  appendReceiptVerticalCutCell_(table.getRow(2).getCell(1));
+  appendReceiptMaybeBlock_(table.getRow(2).getCell(2), "佳音留存聯", config, secondRow);
+}
+
+function appendReceiptMaybeBlock_(cell, title, config, row) {
+  if (row) {
+    appendReceiptBlock_(cell, title, config, row);
+  } else {
+    cell.setText("");
+  }
+}
+
+function setReceiptGridCell_(cell, width) {
+  setReceiptCellWidth_(cell, width);
+  cell.setPaddingTop(5).setPaddingBottom(5).setPaddingLeft(7).setPaddingRight(7);
+}
+
+function appendReceiptVerticalCutCell_(cell) {
+  cell.setPaddingTop(4).setPaddingBottom(4).setPaddingLeft(2).setPaddingRight(2);
+  cell.setText("裁\n切\n線\n\n|\n|\n|\n|\n|\n|");
+  cell.editAsText().setFontSize(8).setForegroundColor("#777777");
+}
+
+function appendReceiptHorizontalCutCell_(cell) {
+  cell.setPaddingTop(1).setPaddingBottom(1).setPaddingLeft(4).setPaddingRight(4);
+  cell.setText("- - - - - - - - - - - - - - - - - - - - - - - - - -");
+  cell.editAsText().setFontSize(8).setForegroundColor("#777777");
+}
+
+function appendReceiptCrossCutCell_(cell) {
+  cell.setPaddingTop(1).setPaddingBottom(1).setPaddingLeft(2).setPaddingRight(2);
+  cell.setText("+");
+  cell.getChild(0).asParagraph().setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+  cell.editAsText().setFontSize(8).setForegroundColor("#777777");
+}
+
+function receiptLevelNameOnly_(row) {
+  const material = receiptText_(row["教材"]);
+  const direct = receiptLevelNameFromText_(row["老師確認級數"], material) ||
+    receiptLevelNameFromText_(row["原報名級數"], material);
+  if (direct) return direct;
+
+  const registration = receiptRegistrationRow_(row);
+  const fromRegistration = receiptLevelNameFromText_(registration && registration["報名級數"], material);
+  if (fromRegistration) return fromRegistration;
+
+  const ss = spreadsheet_();
+  const levels = readLevels_(ss);
+  const campusId = receiptCampusId_(row, registration);
+  const levelId = registration ? receiptText_(registration["報名級數ID"]) : "";
+  const byId = levels.find(level => level.campus === campusId && level.id === levelId);
+  if (byId && byId.levelName) return byId.levelName;
+
+  const byMaterial = receiptLevelByMaterial_(levels, campusId, material);
+  if (byMaterial && byMaterial.levelName) return byMaterial.levelName;
+
+  return "尚未確認";
+}
+
+function receiptLevelNameFromText_(value, material) {
+  const text = receiptText_(value);
+  if (!text || text === "未填級數" || text === "尚未確認") return "";
+  if (!material) return text;
+  const normalizedText = receiptNormalizeLevelText_(text);
+  const normalizedMaterial = receiptNormalizeLevelText_(material);
+  if (normalizedText !== normalizedMaterial && normalizedText.endsWith(normalizedMaterial)) {
+    const start = normalizedText.length - normalizedMaterial.length;
+    return text.slice(0, start).trim() || "";
+  }
+  return text;
+}
+
+function receiptRegistrationRow_(row) {
+  const id = receiptText_(row["報名編號"]);
+  if (!id) return null;
+  const sheet = getOrCreateSheet_(spreadsheet_(), SHEET_NAMES.registrations);
+  return getSheetObjects_(sheet).find(reg => receiptText_(reg["報名編號"]) === id) || null;
+}
+
+function receiptCampusId_(row, registration) {
+  const fromRegistration = registration ? receiptText_(registration["分校ID"]) : "";
+  if (fromRegistration) return fromRegistration;
+  const campusName = receiptText_(row["分校"]);
+  const campus = CAMPUSES.find(c => c.name === campusName);
+  return campus ? campus.id : "";
+}
+
+function receiptLevelByMaterial_(levels, campusId, material) {
+  const normalizedMaterial = receiptNormalizeLevelText_(material);
+  if (!campusId || !normalizedMaterial) return null;
+  const matches = levels.filter(level =>
+    level.campus === campusId &&
+    receiptNormalizeLevelText_(level.material) === normalizedMaterial
+  );
+  return matches.length === 1 ? matches[0] : null;
+}
+
+function receiptNormalizeLevelText_(value) {
+  return receiptText_(value).replace(/～/g, "~").replace(/\s+/g, "");
+}
+
+function appendReceiptPage_(body, firstRow, secondRow, config) {
+  appendReceiptCopyRow_(body, firstRow, secondRow, config, "家長聯");
+  appendReceiptHorizontalCutLine_(body);
+  appendReceiptCopyRow_(body, firstRow, secondRow, config, "佳音留存聯");
+}
+
+function appendReceiptCopyRow_(body, firstRow, secondRow, config, title) {
+  const table = body.appendTable([["", "", ""]]);
+  table.setBorderWidth(1);
+  const cells = table.getRow(0).getNumCells();
+  for (let index = 0; index < cells; index++) table.getRow(0).getCell(index).setPaddingTop(6).setPaddingBottom(6).setPaddingLeft(7).setPaddingRight(7);
+  const left = table.getRow(0).getCell(0);
+  const cut = table.getRow(0).getCell(1);
+  const right = table.getRow(0).getCell(2);
+  setReceiptCellWidth_(left, 375);
+  setReceiptCellWidth_(cut, 18);
+  setReceiptCellWidth_(right, 375);
+  appendReceiptBlock_(left, title, config, firstRow);
+  cut.setText("裁\n切\n線\n\n|\n|\n|\n|");
+  cut.editAsText().setFontSize(8).setForegroundColor("#777777");
+  if (secondRow) {
+    appendReceiptBlock_(right, title, config, secondRow);
+  } else {
+    right.setText("");
+  }
+}
+
+function appendReceiptBlankStudentArea_(body) {
+  const table = body.appendTable([[""]]);
+  table.setBorderWidth(0);
+  const cell = table.getRow(0).getCell(0);
+  cell.setText("\n\n\n\n\n\n");
+  setReceiptCellWidth_(cell, 770);
+}
+
+function appendReceiptHorizontalCutLine_(body) {
+  body.appendParagraph("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -")
+    .setAlignment(DocumentApp.HorizontalAlignment.CENTER)
+    .editAsText()
+    .setFontSize(8)
+    .setForegroundColor("#777777");
+}
+
+function receiptLevelText_(row) {
+  const confirmed = receiptText_(row["老師確認級數"]);
+  const original = receiptText_(row["原報名級數"]);
+  return confirmed || original || "未填級數";
+}
+
+function receiptMoneyText_(value) {
+  const text = receiptText_(value);
+  if (!text) return "";
+  return text.indexOf("元") >= 0 ? text : text + "元";
+}
+
+function receiptDateText_(value) {
+  return receiptText_(value) || "待公告";
+}
+
+function receiptText_(value) {
+  return String(value == null ? "" : value).trim();
+}
+
+function setReceiptCellWidth_(cell, width) {
+  try {
+    cell.setWidth(width);
+  } catch (error) {
+    // Apps Script may ignore fixed cell widths in some document runtimes.
+  }
+}
+
+function setPageSize_(body, width, height) {
+  try {
+    body.setPageWidth(width).setPageHeight(height);
+  } catch (error) {
+    // Some Apps Script runtimes ignore page-size setters; margins still keep the document printable.
+  }
+}
+
+function saveDocAsPrivatePdf_(docId, name) {
+  const folderId = String(PropertiesService.getScriptProperties().getProperty(PRINT_FOLDER_ID_PROPERTY) || "").trim();
+  if (!folderId) throw new Error("尚未設定 Script Properties 的 PRINT_FOLDER_ID，無法儲存私人 PDF。");
+  const folder = DriveApp.getFolderById(folderId);
+  const source = DriveApp.getFileById(docId);
+  const pdf = folder.createFile(source.getBlob().getAs(MimeType.PDF)).setName(name + ".pdf");
+  source.setTrashed(true);
+  return pdf;
+}
+
+function markSelectedReceiptsGenerated_() {
+  const sheet = getOrCreateSheet_(spreadsheet_(), SHEET_NAMES.management);
+  if (sheet.getLastRow() < 2) return;
+  const values = sheet.getRange(2, 1, sheet.getLastRow() - 1, MANAGEMENT_HEADERS.length).getValues();
+  values.forEach((row, index) => {
+    if (row[0] === true) {
+      sheet.getRange(index + 2, 13).setValue("已產生");
+      sheet.getRange(index + 2, 15).setValue(new Date());
+      updateReceiptFromManagementRow_(rowArrayToObject_(sheet.getRange(index + 2, 1, 1, MANAGEMENT_HEADERS.length).getValues()[0]));
+    }
+  });
+}
+
+function selectedManagementRows_() {
+  const sheet = getOrCreateSheet_(spreadsheet_(), SHEET_NAMES.management);
+  return getSheetObjects_(sheet).filter(row => row["列印勾選"] === true);
+}
+
+function levelFromRegistration_(reg, levels) {
+  const campusId = String(reg["分校ID"] || "");
+  const levelId = String(reg["報名級數ID"] || "");
+  return levels.find(l => l.campus === campusId && l.id === levelId) || null;
+}
+
+function levelLabel_(level) {
+  return level ? level.levelName + " " + level.material : "";
+}
+
+function levelByLabel_(levels, campusId, label) {
+  return levels.find(level => level.campus === campusId && levelLabel_(level) === label) || null;
+}
+
+function getOrCreateSheet_(ss, name) {
+  return ss.getSheetByName(name) || ss.insertSheet(name);
+}
+
+function ensureHeaders_(sheet, headers) {
+  const current = sheet.getRange(1, 1, 1, Math.max(sheet.getLastColumn(), headers.length)).getValues()[0];
+  const same = headers.every((header, index) => String(current[index] || "") === header);
+  if (!same) sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
+}
+
+function replaceBody_(sheet, rows) {
+  if (sheet.getLastRow() > 1) sheet.getRange(2, 1, sheet.getLastRow() - 1, sheet.getLastColumn()).clearContent();
+  if (rows.length) sheet.getRange(2, 1, rows.length, rows[0].length).setValues(rows);
+}
+
+function appendByHeader_(sheet, map) {
+  const headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0].map(String);
+  const row = headers.map(header => sanitizeCell_(map[header] == null ? "" : map[header]));
+  sheet.appendRow(row);
+}
+
+function getSheetObjects_(sheet) {
+  const values = sheet.getDataRange().getValues();
+  if (values.length < 2) return [];
+  const headers = values[0].map(String);
+  return values.slice(1).filter(row => row.some(cell => cell !== "")).map(row => {
+    const obj = {};
+    headers.forEach((header, index) => obj[header] = row[index]);
+    return obj;
+  });
+}
+
+function rowArrayToObject_(row) {
+  const obj = {};
+  MANAGEMENT_HEADERS.forEach((header, index) => obj[header] = row[index]);
+  return obj;
+}
+
+function upsertById_(sheet, idHeader, id, map) {
+  const headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0].map(String);
+  const idIndex = headers.indexOf(idHeader);
+  if (idIndex < 0) throw new Error("找不到欄位：" + idHeader);
+  const values = sheet.getDataRange().getValues();
+  let rowNumber = -1;
+  for (let i = 1; i < values.length; i++) {
+    if (String(values[i][idIndex] || "") === String(id)) {
+      rowNumber = i + 1;
+      break;
+    }
+  }
+  const row = headers.map(header => sanitizeCell_(map[header] == null ? "" : map[header]));
+  if (rowNumber > 0) sheet.getRange(rowNumber, 1, 1, row.length).setValues([row]);
+  else sheet.appendRow(row);
+}
+
+function upsertManagementRow_(sheet, row) {
+  const id = String(row[1] || "");
+  if (!id) return 0;
+  const values = sheet.getDataRange().getValues();
+  let rowNumber = -1;
+  for (let i = 1; i < values.length; i++) {
+    if (String(values[i][1] || "") === id) {
+      rowNumber = i + 1;
+      break;
+    }
+  }
+  const clean = row.map(sanitizeCell_);
+  if (rowNumber > 0) sheet.getRange(rowNumber, 1, 1, clean.length).setValues([clean]);
+  else {
+    sheet.appendRow(clean);
+    rowNumber = sheet.getLastRow();
+  }
+  return rowNumber;
+}
+
+function sanitizeCell_(value) {
+  if (value === true || value === false) return value;
+  if (Object.prototype.toString.call(value) === "[object Date]") return value;
+  return sanitizeForSheet_(value);
+}
+
+function nextRegistrationId_(sheet, edition) {
+  const ids = getSheetObjects_(sheet).map(row => String(row["報名編號"] || ""));
+  let max = 0;
+  ids.forEach(id => {
+    const match = id.match(/^JEPT\d+-(\d+)$/);
+    if (match) max = Math.max(max, Number(match[1]));
+  });
+  return "JEPT" + String(edition || "45").replace(/\D/g, "") + "-" + String(max + 1).padStart(3, "0");
+}
+
+function hasDuplicateRegistration_(sheet, edition, campusId, nationalId) {
+  const editionText = String(edition || "").replace(/\D/g, "");
+  return getSheetObjects_(sheet).some(row => {
+    const rowEdition = String(row["屆數"] || "").replace(/\D/g, "") ||
+      ((String(row["報名編號"] || "").match(/^JEPT(\d+)-/) || [])[1] || "");
+    return rowEdition === editionText &&
+      String(row["分校ID"] || "") === String(campusId || "") &&
+      String(row["身分證字號"] || "").toUpperCase() === String(nationalId || "").toUpperCase();
+  });
+}
+
+function parsePayload_(e) {
+  if (e && e.parameter && e.parameter.payload) {
+    try {
+      return JSON.parse(e.parameter.payload);
+    } catch (error) {
+      return {};
+    }
+  }
+  if (e && e.postData && e.postData.contents) {
+    try {
+      return JSON.parse(e.postData.contents);
+    } catch (error) {
+      return {};
+    }
+  }
+  return {};
+}
+
+function json_(payload) {
+  return ContentService.createTextOutput(JSON.stringify(payload)).setMimeType(ContentService.MimeType.JSON);
+}
+
+function respond_(payload, params) {
+  const callback = String((params && params.callback) || "").trim();
+  if (callback && /^[A-Za-z_$][0-9A-Za-z_$]*$/.test(callback)) {
+    return ContentService
+      .createTextOutput(callback + "(" + JSON.stringify(payload) + ");")
+      .setMimeType(ContentService.MimeType.JAVASCRIPT);
+  }
+  return json_(payload);
+}
+
+function postMessage_(payload, nonce) {
+  const body = {
+    source: "jept-registration",
+    nonce: String(nonce || ""),
+    payload
+  };
+  const html = "<!doctype html><html><body><script>parent.postMessage(" +
+    JSON.stringify(body).replace(/<\//g, "<\\/") +
+    ", '*');</script></body></html>";
+  return HtmlService.createHtmlOutput(html);
+}
+
+function maskName_(name) {
+  const text = String(name || "");
+  if (text.length <= 1) return text;
+  return text[0] + "*".repeat(text.length - 1);
+}
+
+function currentUserEmail_() {
+  return String(Session.getActiveUser().getEmail() || "").toLowerCase();
+}
+
+function adminEmails_() {
+  return String(PropertiesService.getScriptProperties().getProperty(ADMIN_EMAIL_PROPERTY) || "")
+    .split(",")
+    .map(email => email.trim().toLowerCase())
+    .filter(Boolean);
+}
+
+function requireAdmin_() {
+  const email = currentUserEmail_();
+  const allowed = adminEmails_();
+  if (!email || !allowed.includes(email)) throw new Error("未授權的管理帳號");
+}
